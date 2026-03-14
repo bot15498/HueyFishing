@@ -22,19 +22,24 @@ public class Boat : MonoBehaviour
 
     public bool canMove;
 
+    Rigidbody rb;
 
     private void Start()
     {
+        rb = GetComponent<Rigidbody>();
         canMove = true;
     }
-    void Update()
-    {
 
-        if (canMove == true)
+    void FixedUpdate()
+    {
+        if (canMove)
         {
             HandleMovement();
             HandleTurning();
         }
+
+        Vector3 rot = rb.rotation.eulerAngles;
+        rb.MoveRotation(Quaternion.Euler(0f, rot.y, 0f));
     }
 
     void HandleMovement()
@@ -48,20 +53,22 @@ public class Boat : MonoBehaviour
 
         if (input > 0f)
         {
-            currentSpeed += acceleration * Time.deltaTime;
+            currentSpeed += acceleration * Time.fixedDeltaTime;
         }
         else if (input < 0f)
         {
-            currentSpeed -= reverseAcceleration * Time.deltaTime;
+            currentSpeed -= reverseAcceleration * Time.fixedDeltaTime;
         }
         else
         {
-            currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, waterDrag * Time.deltaTime);
+            currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, waterDrag * Time.fixedDeltaTime);
         }
 
         currentSpeed = Mathf.Clamp(currentSpeed, maxReverseSpeed, maxSpeed);
 
-        transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
+        Vector3 move = transform.forward * currentSpeed * Time.fixedDeltaTime;
+
+        rb.MovePosition(rb.position + move);
     }
 
     void HandleTurning()
@@ -75,11 +82,11 @@ public class Boat : MonoBehaviour
 
         if (turnInput != 0f)
         {
-            currentTurnSpeed += turnInput * turnAcceleration * Time.deltaTime;
+            currentTurnSpeed += turnInput * turnAcceleration * Time.fixedDeltaTime;
         }
         else
         {
-            currentTurnSpeed = Mathf.MoveTowards(currentTurnSpeed, 0f, turnDrag * Time.deltaTime);
+            currentTurnSpeed = Mathf.MoveTowards(currentTurnSpeed, 0f, turnDrag * Time.fixedDeltaTime);
         }
 
         currentTurnSpeed = Mathf.Clamp(currentTurnSpeed, -maxTurnSpeed, maxTurnSpeed);
@@ -89,7 +96,11 @@ public class Boat : MonoBehaviour
 
         float reverseFlip = currentSpeed < 0f ? -1f : 1f;
 
-        transform.Rotate(Vector3.up * currentTurnSpeed * speedFactor * reverseFlip * Time.deltaTime);
+        float turnAmount = currentTurnSpeed * speedFactor * reverseFlip * Time.fixedDeltaTime;
+
+        Quaternion rotation = Quaternion.Euler(0f, turnAmount, 0f);
+
+        rb.MoveRotation(rb.rotation * rotation);
     }
 
     void toggleCanmove()
