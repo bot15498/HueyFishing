@@ -30,6 +30,7 @@ Material:
   - _ENABLEPLANERREFLECTION
   - _ENABLEREFRACTION
   - _ENABLESHORELINE
+  - _ENABLEWAVE
   m_InvalidKeywords: []
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
@@ -184,7 +185,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _1st_Wave_Height: 0.01
-    - _1st_Wave_Length: 3
+    - _1st_Wave_Length: 12.62
     - _1st_Wave_Sharpness: 0.3
     - _1st_Wave_Speed: 1
     - _2nd_Wave_Height: 0.015
@@ -241,7 +242,7 @@ Material:
     - _ENABLESHORELINE: 1
     - _ENABLESURFACEFOAM: 0
     - _ENABLEUNDERWATERLAYER: 0
-    - _ENABLEWAVE: 0
+    - _ENABLEWAVE: 1
     - _ENABLE_UNDERWATERLAYER: 0
     - _ENVIRONMENTREFLECTIONS_OFF: 1
     - _Enable_Intersection: 1
@@ -291,8 +292,8 @@ Material:
     - _NormalPan: 0.1
     - _NormalStrength: 0.3
     - _NormalTile: 4
-    - _Normal_DistanceStrength: 0.3
-    - _Normal_Pan: 1.5
+    - _Normal_DistanceStrength: 0.64
+    - _Normal_Pan: 1.46
     - _Normal_Scale: 15
     - _Normal_Strength: 1.4
     - _Normal_Tile: 5
@@ -352,7 +353,7 @@ Material:
     - _Smoothness: 1
     - _Specular_Hardness: 0.976
     - _Specular_Size: 0.496
-    - _Specular_Spread: 0
+    - _Specular_Spread: 0.631
     - _Specular_Strength: 50
     - _SrcBlend: 5
     - _SurfFoam_AlphaBlend: 0
@@ -447,7 +448,7 @@ Material:
     - _ShoreLineMaskPan: {r: 0.01, g: 0.02, b: 0, a: 0}
     - _ShoreLineMaskPanning: {r: 0, g: 0, b: 0, a: 0}
     - _ShoreLineMaskTile: {r: 3, g: 3, b: 0, a: 0}
-    - _Specular_Color: {r: 22.627417, g: 22.627417, b: 22.627417, a: 1}
+    - _Specular_Color: {r: 12.254747, g: 12.254747, b: 12.254747, a: 1}
     - _SurfFoam_Color: {r: 0.9528302, g: 0.9528302, b: 0.9528302, a: 1}
     - _SurfFoam_Pan: {r: -0.3, g: -0.5, b: 0.1, a: 0}
     - _SurfFoam_Tile: {r: 1.5, g: 1.5, b: 0, a: 0}
@@ -464,7 +465,7 @@ Material:
     - _WaveDirection: {r: 1, g: 0, b: 0, a: 0}
     - _WaveDirection2nd: {r: 0, g: 0, b: 1, a: 0}
     - _WaveTopColor: {r: 1, g: 0.07585351, b: 0, a: 1}
-    - _Wave_Top_Color: {r: 0.29829118, g: 0.9207434, b: 0.9245283, a: 1}
+    - _Wave_Top_Color: {r: 0.2982911, g: 0.9207434, b: 0.9245283, a: 0.0627451}
     - _maskMinMax: {r: 0, g: 0.78, b: 0, a: 0}
     - _shoreTexSpeed: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _shoreTexTile: {r: 1, g: 1, b: 0, a: 0}
