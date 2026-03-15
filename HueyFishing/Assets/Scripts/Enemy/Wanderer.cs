@@ -15,14 +15,21 @@ namespace Enemy
     /// </remarks>
     public class Wanderer : MonoBehaviour
     {
-        public List<Movement> Queue = new() { Movements.CritterWander };
+        public Preset movementPreset = Preset.CritterWander;
+
+        List<Movement> Queue =>
+            movementPreset switch
+            {
+                Preset.CritterWander => Presets.CritterWander,
+                _ => Presets.CritterWander
+            };
+
         int QueuePosition { get; set; }
         Movement Current => Queue[QueuePosition];
 
         bool _hasMovement;
         float _phaseStopwatch;
         Phase _phase = Phase.PreWait;
-        Quadrant _quadrant = Quadrant.TopRight;
 
         float _angle;
         float _magnitude;
@@ -48,7 +55,8 @@ namespace Enemy
                     break;
 
                 case Phase.Move:
-                    var direction = new Vector3(Mathf.Sin(_angle * Mathf.Deg2Rad), 0, Mathf.Cos(_angle * Mathf.Deg2Rad));
+                    var direction = new Vector3(Mathf.Sin(_angle * Mathf.Deg2Rad), 0,
+                        Mathf.Cos(_angle * Mathf.Deg2Rad));
                     var deltaMagnitude = Mathf.Lerp(0f, _magnitude, Time.deltaTime / _duration);
                     var deltaMove = direction * deltaMagnitude;
                     transform.position += deltaMove;
@@ -61,8 +69,6 @@ namespace Enemy
                 case Phase.PostWait:
                     if (_phaseStopwatch < _postWait) break;
                     QueuePosition = (QueuePosition + 1) % Queue.Count;
-                    if (Current.Direction == Direction.Quarters)
-                        _quadrant = (Quadrant) ((int) _quadrant % 4 + 1);
                     CacheMovement();
                     break;
             }
@@ -97,19 +103,7 @@ namespace Enemy
             _phaseStopwatch = 0;
             _phase = Phase.PreWait;
 
-            _angle = Current.Direction switch
-            {
-                Direction.Random => Random.Range(0f, 360f),
-                Direction.Quarters => _quadrant switch
-                {
-                    Quadrant.TopRight => Random.Range(0f, 90f),
-                    Quadrant.TopLeft => Random.Range(90f, 180f),
-                    Quadrant.BottomLeft => Random.Range(180f, 270f),
-                    Quadrant.BottomRight => Random.Range(270f, 360f),
-                    _ => throw new ArgumentOutOfRangeException()
-                },
-                _ => throw new ArgumentOutOfRangeException()
-            };
+            _angle = Random.Range(Current.AngleMin, Current.AngleMax);
             _magnitude = Random.Range(Current.MagnitudeMin, Current.MagnitudeMax);
             _duration = Random.Range(Current.DurationMin, Current.DurationMax);
             _preWait = Random.Range(Current.PreWaitMin, Current.PreWaitMax);
@@ -123,10 +117,14 @@ namespace Enemy
     ////////////////////////////////////////
     public struct Movement
     {
-        public Movement(Direction direction, float magnitudeMin, float magnitudeMax, float durationMin,
-            float durationMax, float preWaitMin, float preWaitMax, float postWaitMin, float postWaitMax)
+        public Movement(float angleMin = 0f, float angleMax = 360f,
+            float magnitudeMin = 0f, float magnitudeMax = 1f,
+            float preWaitMin = 0f, float preWaitMax = 0f,
+            float durationMin = 1f, float durationMax = 1f,
+            float postWaitMin = 0f, float postWaitMax = 0f)
         {
-            Direction = direction;
+            AngleMin = angleMin;
+            AngleMax = angleMax;
             MagnitudeMin = magnitudeMin;
             MagnitudeMax = magnitudeMax;
             PreWaitMin = preWaitMin;
@@ -137,7 +135,8 @@ namespace Enemy
             PostWaitMax = postWaitMax;
         }
 
-        public readonly Direction Direction;
+        public readonly float AngleMin;
+        public readonly float AngleMax;
         public readonly float MagnitudeMin;
         public readonly float MagnitudeMax;
         public readonly float PreWaitMin;
@@ -146,16 +145,6 @@ namespace Enemy
         public readonly float DurationMax;
         public readonly float PostWaitMin;
         public readonly float PostWaitMax;
-    }
-
-
-    public enum Direction
-    {
-        /// <summary> Completely random </summary>
-        Random,
-
-        /// <summary> Alternate between four quadrants in order. Within quadrant, pick a random direction </summary>
-        Quarters
     }
 
 
@@ -170,30 +159,31 @@ namespace Enemy
     }
 
 
-    internal enum Quadrant
-    {
-        TopRight = 1,
-        TopLeft = 2,
-        BottomLeft = 3,
-        BottomRight = 4
-    }
-
-
     ////////////////////////////////////////
     // Default Data Sets
     ////////////////////////////////////////
-    public static class Movements
+    public enum Preset
     {
-        public static readonly Movement CritterWander = new(
-            direction: Direction.Random,
-            magnitudeMin: 1f,
-            magnitudeMax: 1f,
-            preWaitMin: 0.5f,
-            preWaitMax: 0.5f,
-            durationMin: 0.5f,
-            durationMax: 0.5f,
-            postWaitMin: 0.5f,
-            postWaitMax: 0.5f
-        );
+        CritterWander
+    }
+
+
+    public static class Presets
+    {
+        public static readonly List<Movement> CritterWander = new()
+        {
+            new Movement(
+                angleMin: 0f,
+                angleMax: 360f,
+                magnitudeMin: 1f,
+                magnitudeMax: 1f,
+                preWaitMin: 0f,
+                preWaitMax: 0f,
+                durationMin: 0.5f,
+                durationMax: 0.5f,
+                postWaitMin: 0.5f,
+                postWaitMax: 0.5f
+            )
+        };
     }
 }
