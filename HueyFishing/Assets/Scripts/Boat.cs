@@ -1,6 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
-
+using DG.Tweening;
 public class Boat : MonoBehaviour
 {
     [Header("Movement")]
@@ -24,10 +24,29 @@ public class Boat : MonoBehaviour
 
     Rigidbody rb;
 
+    [Header("Boat Rock")]
+    public Transform boatVisual;
+
+    public float rockSpeed = 2f;
+    public float rockAmountMoving = 2f;
+    public float rockAmountIdle = 8f;
+
+    Tween rockTween;
+
+
+    [Header("Rocking")]
+    public float rockDuration = 2f;
+    public float maxPitchIdle = 4f;   // forward/back
+    public float maxRollIdle = 7f;    // side to side
+    public float maxPitchMoving = 1.5f;
+    public float maxRollMoving = 2.5f;
+
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         canMove = true;
+        StartRocking();
     }
 
     void FixedUpdate()
@@ -36,10 +55,9 @@ public class Boat : MonoBehaviour
         {
             HandleMovement();
             HandleTurning();
-        }
 
-        Vector3 rot = rb.rotation.eulerAngles;
-        rb.MoveRotation(Quaternion.Euler(0f, rot.y, 0f));
+        }
+        UpdateRocking();
     }
 
     void HandleMovement()
@@ -66,9 +84,15 @@ public class Boat : MonoBehaviour
 
         currentSpeed = Mathf.Clamp(currentSpeed, maxReverseSpeed, maxSpeed);
 
-        Vector3 move = transform.forward * currentSpeed * Time.fixedDeltaTime;
+        Vector3 forward = transform.forward;
+        forward.y = 0f;
+        forward.Normalize();
 
-        rb.MovePosition(rb.position + move);
+        rb.linearVelocity = new Vector3(
+            forward.x * currentSpeed,
+            rb.linearVelocity.y,
+            forward.z * currentSpeed
+        );
     }
 
     void HandleTurning()
@@ -103,11 +127,60 @@ public class Boat : MonoBehaviour
         rb.MoveRotation(rb.rotation * rotation);
     }
 
-    void toggleCanmove()
+    public void toggleCanmove()
     {
         canMove = !canMove;
     }
 
+    void StartRocking()
+    {
+        if (boatVisual == null)
+            return;
+
+        rockTween?.Kill();
+
+        Vector3 startRot = boatVisual.localEulerAngles;
+        boatVisual.localRotation = Quaternion.Euler(0f, startRot.y, 0f);
+
+        rockTween = DOTween.To(
+            () => 0f,
+            value =>
+            {
+                float speedPercent = Mathf.Clamp01(Mathf.Abs(currentSpeed) / maxSpeed);
+
+                float pitchAmount = Mathf.Lerp(maxPitchIdle, maxPitchMoving, speedPercent);
+                float rollAmount = Mathf.Lerp(maxRollIdle, maxRollMoving, speedPercent);
+
+                float pitch = Mathf.Sin(value) * pitchAmount;
+                float roll = Mathf.Cos(value * 0.85f) * rollAmount;
+
+                boatVisual.localRotation = Quaternion.Euler(pitch, 0f, roll);
+            },
+            Mathf.PI * 2f,
+            rockDuration
+        )
+        .SetEase(Ease.Linear)
+        .SetLoops(-1, LoopType.Restart);
+
+    }
+
+    void UpdateRocking()
+    {
+        if (rockTween == null || !rockTween.IsActive())
+            return;
+
+        
+        float speedPercent = Mathf.Clamp01(Mathf.Abs(currentSpeed) / maxSpeed);
+        rockTween.timeScale = Mathf.Lerp(1f, 1.35f, speedPercent);
+
+    }
+
+
+    private void OnDisable()
+    {
+        rockTween?.Kill();
+
+    }
 }
 
 
