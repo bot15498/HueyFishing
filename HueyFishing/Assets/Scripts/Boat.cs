@@ -41,6 +41,16 @@ public class Boat : MonoBehaviour
     public float maxPitchMoving = 1.5f;
     public float maxRollMoving = 2.5f;
 
+    [Header("Turn Visual")]
+    public Transform turnVisual;
+    public Transform turnVisual2;
+    public float maxVisualYaw = 30f;
+    public float visualTurnTweenTime = 0.15f;
+
+    Tween turnVisualTween;
+    float lastVisualYaw;
+
+
 
     private void Start()
     {
@@ -58,6 +68,7 @@ public class Boat : MonoBehaviour
 
         }
         UpdateRocking();
+        UpdateTurnVisual();
     }
 
     void HandleMovement()
@@ -91,8 +102,7 @@ public class Boat : MonoBehaviour
         rb.linearVelocity = new Vector3(
             forward.x * currentSpeed,
             rb.linearVelocity.y,
-            forward.z * currentSpeed
-        );
+            forward.z * currentSpeed);
     }
 
     void HandleTurning()
@@ -180,6 +190,60 @@ public class Boat : MonoBehaviour
     {
         rockTween?.Kill();
 
+    }
+
+    void UpdateTurnVisual()
+    {
+        if (turnVisual == null)
+            return;
+
+        float normalizedTurn = 0f;
+
+        if (maxTurnSpeed > 0f)
+            normalizedTurn = Mathf.Clamp(currentTurnSpeed / maxTurnSpeed, -1f, 1f);
+
+        float targetYaw = normalizedTurn * maxVisualYaw;
+
+        if (Mathf.Abs(targetYaw - lastVisualYaw) < 0.05f)
+            return;
+
+        lastVisualYaw = targetYaw;
+
+        if (turnVisualTween != null && turnVisualTween.IsActive())
+            turnVisualTween.Kill();
+
+        Vector3 currentRot = turnVisual.localEulerAngles;
+        float currentX = turnVisual.localEulerAngles.x;
+        float currentZ = turnVisual.localEulerAngles.z;
+
+        turnVisualTween = turnVisual
+            .DOLocalRotate(new Vector3(
+                NormalizeAngle(currentX),
+                targetYaw,
+                NormalizeAngle(currentZ)
+            ), visualTurnTweenTime)
+            .SetEase(Ease.OutSine);
+
+
+
+
+        turnVisualTween = turnVisual
+            .DOLocalRotate(new Vector3(
+                NormalizeAngle(currentX),
+                targetYaw,
+                NormalizeAngle(currentZ)
+            ), visualTurnTweenTime)
+            .SetEase(Ease.OutSine);
+
+
+
+    }
+
+    float NormalizeAngle(float angle)
+    {
+        while (angle > 180f) angle -= 360f;
+        while (angle < -180f) angle += 360f;
+        return angle;
     }
 }
 

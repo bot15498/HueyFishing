@@ -323,7 +323,7 @@ Material:
     - _ReflectionFresnelStrength: 0.3
     - _Reflection_Distortion: 1.25
     - _Reflection_Fresnel: 6
-    - _Reflection_Strength: 0.875
+    - _Reflection_Strength: 0.823
     - _RefractionFadeDistance: 0.5
     - _RefractionStrength: 1
     - _Refraction_Distace_Mask: 10

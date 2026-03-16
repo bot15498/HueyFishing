@@ -6,12 +6,15 @@ using DG.Tweening;
 public class FishingZone : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    public GameObject gamemanager;
     CameraManager cmanager;
     public GameObject boatlocationStorage;
     public CinemachineCamera FishingCamera;
     bool canstartfishing;
     public Transform ParkSpot;
     public float moveDuration = 1f;
+    UiManager uiManager;
 
     Tween moveTween;
 
@@ -19,8 +22,9 @@ public class FishingZone : MonoBehaviour
     void Start()
     {
         canstartfishing = false;
-
-        cmanager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<CameraManager>();
+        gamemanager = GameObject.FindGameObjectWithTag("GameManager");
+        cmanager = gamemanager.GetComponent<CameraManager>();
+        uiManager = gamemanager.GetComponent<UiManager>();
     }
 
     // Update is called once per frame
@@ -65,6 +69,7 @@ public class FishingZone : MonoBehaviour
     {
         player.GetComponent<Boat>().toggleCanmove();
         cmanager.switchCamera(FishingCamera);
+        uiManager.startFishingUI();
         Debug.Log("Now Fishing");
         MoveBoat();
 
