@@ -2,6 +2,7 @@ using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEngine;
 using DG.Tweening;
+using System.Collections;
 
 public class FishingZone : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class FishingZone : MonoBehaviour
     Tween moveTween;
 
     GameObject player;
+
+    public float delayTime;
     void Start()
     {
         canstartfishing = false;
@@ -75,9 +78,13 @@ public class FishingZone : MonoBehaviour
         Debug.Log("Now Fishing");
         MoveBoat();
 
+        //fihsing zone intro and delay
+        //disable starting fishing zone mesh and trigger collider
 
-        //add start fishing stuff here
-        drawingManager.canDraw = true;
+        StartCoroutine(startFishingGameplay(delayTime));
+
+
+        
 
         //battle intro
 
@@ -108,5 +115,18 @@ public class FishingZone : MonoBehaviour
         moveTween?.Kill();
 
         moveTween = player.transform.DOMove(targetPos, moveDuration);
+    }
+
+
+    private IEnumerator startFishingGameplay(float delayTime)
+    {
+        //Wait for the specified delay time before continuing.
+        yield return new WaitForSeconds(delayTime);
+
+        Debug.Log("delay");
+        //add start fishing stuff here
+        drawingManager.canDraw = true;
+
+        //Do the action after the delay time has finished.
     }
 }
