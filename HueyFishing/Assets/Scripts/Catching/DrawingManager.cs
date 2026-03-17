@@ -170,6 +170,7 @@ public class DrawingManager : MonoBehaviour
 
         Rigidbody rb = go.AddComponent<Rigidbody>();
         rb.useGravity = false;
+        rb.isKinematic = true;
 
         CatchTrailCollider ctc = go.AddComponent<CatchTrailCollider>();
         ctc.drawingManager = this;

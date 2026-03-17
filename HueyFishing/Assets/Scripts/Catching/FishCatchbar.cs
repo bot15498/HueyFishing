@@ -10,6 +10,11 @@ public class FishCatchbar : MonoBehaviour
     void Start()
     {
         currCatchBar = 0;
+        if (fishManager != null)
+        {
+            fishManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<FishManager>();
+            fishManager.currentFish.Add(this);
+        }
     }
 
     void Update()

@@ -15765,6 +15765,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1993661082}
   - component: {fileID: 1993661081}
+  - component: {fileID: 1993661084}
+  - component: {fileID: 1993661083}
   m_Layer: 0
   m_Name: pngfish
   m_TagString: Untagged
@@ -15846,6 +15848,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 60.954, y: 0, z: 0}
+--- !u!114 &1993661083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1993661080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c99f9053d66344479a5430be7fdf9dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FishCatchbar
+  currCatchBar: 0
+  maxCatchBar: 5
+  fishManager: {fileID: 0}
+--- !u!114 &1993661084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1993661080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa69b02d19e5cdf4d92c039850ff9618, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DamageLine
+  playerDamageAmount: 10
 --- !u!1 &2061355584
 GameObject:
   m_ObjectHideFlags: 0
