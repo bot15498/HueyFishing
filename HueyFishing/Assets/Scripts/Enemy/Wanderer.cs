@@ -22,6 +22,9 @@ namespace Enemy
             movementPreset switch
             {
                 Preset.CritterWander => Presets.CritterWander,
+                Preset.JitterCircle => Presets.JitterCircle,
+                Preset.PingPong => Presets.PingPong,
+                Preset.RampingBull => Presets.RampingBull,
                 _ => Presets.CritterWander
             };
 
@@ -200,7 +203,7 @@ namespace Enemy
         public Movement(float? angleMin = 0f, float? angleMax = 360f,
             float? magnitudeMin = 0f, float? magnitudeMax = 1f,
             float? preWaitMin = 0f, float? preWaitMax = 0f,
-            float? durationMin = 0.25f, float? durationMax = 0.25f,
+            float? durationMin = 1f, float? durationMax = 1f,
             float? postWaitMin = 0f, float? postWaitMax = 0f)
         {
             AngleMin = angleMin;
@@ -244,7 +247,10 @@ namespace Enemy
     ////////////////////////////////////////
     public enum Preset
     {
-        CritterWander
+        CritterWander,
+        JitterCircle,
+        PingPong,
+        RampingBull
     }
 
 
@@ -264,6 +270,115 @@ namespace Enemy
                 postWaitMin: 0.5f,
                 postWaitMax: 0.5f
             )
+        };
+
+
+        public static readonly List<Movement> JitterCircle = new()
+        {
+            new Movement(angleMin: 0f, angleMax: 20f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 20f, angleMax: 40f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 40f, angleMax: 60f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 60f, angleMax: 80f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 80f, angleMax: 100f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 100f, angleMax: 120f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 120f, angleMax: 140f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 140f, angleMax: 160f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 160f, angleMax: 180f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 180f, angleMax: 200f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 200f, angleMax: 220f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 220f, angleMax: 240f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 240f, angleMax: 260f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 260f, angleMax: 280f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 280f, angleMax: 300f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 300f, angleMax: 320f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 320f, angleMax: 340f, durationMin: 0.25f, durationMax: 0.25f),
+            new Movement(angleMin: 340f, angleMax: 360f, durationMin: 0.25f, durationMax: 0.25f)
+        };
+
+
+        public static readonly List<Movement> PingPong = new()
+        {
+            new Movement(angleMin: 0f, angleMax: 90f,
+                magnitudeMin: 3f, magnitudeMax: 3f,
+                durationMin: 0.5f, durationMax: 0.5f),
+            new Movement(angleMin: 180f, angleMax: 270f,
+                magnitudeMin: 3f, magnitudeMax: 3f,
+                durationMin: 0.5f, durationMax: 0.5f),
+            new Movement(angleMin: 90f, angleMax: 180f,
+                magnitudeMin: 3f, magnitudeMax: 3f,
+                durationMin: 0.5f, durationMax: 0.5f),
+            new Movement(angleMin: 270f, angleMax: 360f,
+                magnitudeMin: 3f, magnitudeMax: 3f,
+                durationMin: 0.5f, durationMax: 0.5f)
+        };
+
+
+        public static readonly List<Movement> RampingBull = new()
+        {
+            new Movement(magnitudeMin: 0.1f, magnitudeMax: 0.1f, durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.12f, magnitudeMax: 0.12f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.14f, magnitudeMax: 0.14f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.16f, magnitudeMax: 0.16f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.18f, magnitudeMax: 0.18f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.2f, magnitudeMax: 0.2f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.24f, magnitudeMax: 0.24f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.28f, magnitudeMax: 0.28f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.32f, magnitudeMax: 0.32f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.36f, magnitudeMax: 0.36f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.40f, magnitudeMax: 0.40f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.50f, magnitudeMax: 0.50f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.60f, magnitudeMax: 0.60f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.70f, magnitudeMax: 0.70f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.80f, magnitudeMax: 0.80f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.70f, magnitudeMax: 0.70f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.60f, magnitudeMax: 0.60f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.50f, magnitudeMax: 0.50f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.40f, magnitudeMax: 0.40f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.30f, magnitudeMax: 0.30f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.20f, magnitudeMax: 0.20f,
+                durationMin: 0.1f, durationMax: 0.1f),
+            new Movement(angleMin: null, angleMax: null,
+                magnitudeMin: 0.10f, magnitudeMax: 0.10f,
+                durationMin: 0.1f, durationMax: 0.1f)
         };
     }
 }
