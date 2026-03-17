@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Debug = System.Diagnostics.Debug;
 using Random = UnityEngine.Random;
 
 namespace Enemy
@@ -31,11 +32,11 @@ namespace Enemy
         float _phaseStopwatch;
         Phase _phase = Phase.PreWait;
 
-        float _angle;
-        float _magnitude;
-        float _preWait;
-        float _duration;
-        float _postWait;
+        float? _angle;
+        float? _magnitude;
+        float? _preWait;
+        float? _duration;
+        float? _postWait;
 
         ////////////////////////////////////////
         // Main Movement Loop
@@ -43,6 +44,11 @@ namespace Enemy
         void FixedUpdate()
         {
             if (!InitMovement()) return;
+            Debug.Assert(_angle != null, nameof(_angle) + " != null");
+            Debug.Assert(_magnitude != null, nameof(_magnitude) + " != null");
+            Debug.Assert(_preWait != null, nameof(_preWait) + " != null");
+            Debug.Assert(_duration != null, nameof(_duration) + " != null");
+            Debug.Assert(_postWait != null, nameof(_postWait) + " != null");
             _phaseStopwatch += Time.deltaTime;
 
             switch (_phase)
@@ -55,10 +61,10 @@ namespace Enemy
                     break;
 
                 case Phase.Move:
-                    var directionX = Mathf.Sin(_angle * Mathf.Deg2Rad);
-                    var directionZ = Mathf.Cos(_angle * Mathf.Deg2Rad);
+                    var directionX = Mathf.Sin((float)_angle * Mathf.Deg2Rad);
+                    var directionZ = Mathf.Cos((float)_angle * Mathf.Deg2Rad);
                     var direction = new Vector3(directionX, 0, directionZ);
-                    var deltaMagnitude = Mathf.Lerp(0f, _magnitude, Time.deltaTime / _duration);
+                    var deltaMagnitude = Mathf.Lerp(0f, (float)_magnitude, Time.deltaTime / (float)_duration);
                     var deltaMove = direction * deltaMagnitude;
                     transform.position += deltaMove;
 
@@ -104,11 +110,30 @@ namespace Enemy
             _phaseStopwatch = 0;
             _phase = Phase.PreWait;
 
-            _angle = Random.Range(Current.AngleMin, Current.AngleMax);
-            _magnitude = Random.Range(Current.MagnitudeMin, Current.MagnitudeMax);
-            _duration = Random.Range(Current.DurationMin, Current.DurationMax);
-            _preWait = Random.Range(Current.PreWaitMin, Current.PreWaitMax);
-            _postWait = Random.Range(Current.PostWaitMin, Current.PostWaitMax);
+            if (Current is { AngleMin: not null, AngleMax: not null })
+                _angle = Random.Range((float)Current.AngleMin, (float)Current.AngleMax);
+            else if (_angle is null)
+                throw new ArgumentNullException($"Missing previous Movement to inherit angle from.");
+
+            if (Current is { MagnitudeMin: not null, MagnitudeMax: not null })
+                _magnitude = Random.Range((float)Current.MagnitudeMin, (float)Current.MagnitudeMax);
+            else if (_magnitude is null)
+                throw new ArgumentNullException($"Missing previous Movement to inherit magnitude from.");
+
+            if (Current is { DurationMin: not null, DurationMax: not null })
+                _duration = Random.Range((float)Current.DurationMin, (float)Current.DurationMax);
+            else if (_duration is null)
+                throw new ArgumentNullException($"Missing previous Movement to inherit duration from.");
+
+            if (Current is { PreWaitMin: not null, PreWaitMax: not null })
+                _preWait = Random.Range((float)Current.PreWaitMin, (float)Current.PreWaitMax);
+            else if (_preWait is null)
+                throw new ArgumentNullException($"Missing previous Movement to inherit preWait from.");
+
+            if (Current is { PostWaitMin: not null, PostWaitMax: not null })
+                _postWait = Random.Range((float)Current.PostWaitMin, (float)Current.PostWaitMax);
+            else if (_postWait is null)
+                throw new ArgumentNullException($"Missing previous Movement to inherit postWait from.");
         }
     }
 
@@ -116,13 +141,14 @@ namespace Enemy
     ////////////////////////////////////////
     // Data Structures
     ////////////////////////////////////////
+    /// <remarks> If a parameter is null, it keeps the parameter from the previous Movement in the queue. </remarks>
     public struct Movement
     {
-        public Movement(float angleMin = 0f, float angleMax = 360f,
-            float magnitudeMin = 0f, float magnitudeMax = 1f,
-            float preWaitMin = 0f, float preWaitMax = 0f,
-            float durationMin = 1f, float durationMax = 1f,
-            float postWaitMin = 0f, float postWaitMax = 0f)
+        public Movement(float? angleMin = 0f, float? angleMax = 360f,
+            float? magnitudeMin = 0f, float? magnitudeMax = 1f,
+            float? preWaitMin = 0f, float? preWaitMax = 0f,
+            float? durationMin = 0.25f, float? durationMax = 0.25f,
+            float? postWaitMin = 0f, float? postWaitMax = 0f)
         {
             AngleMin = angleMin;
             AngleMax = angleMax;
@@ -136,16 +162,16 @@ namespace Enemy
             PostWaitMax = postWaitMax;
         }
 
-        public readonly float AngleMin;
-        public readonly float AngleMax;
-        public readonly float MagnitudeMin;
-        public readonly float MagnitudeMax;
-        public readonly float PreWaitMin;
-        public readonly float PreWaitMax;
-        public readonly float DurationMin;
-        public readonly float DurationMax;
-        public readonly float PostWaitMin;
-        public readonly float PostWaitMax;
+        public readonly float? AngleMin;
+        public readonly float? AngleMax;
+        public readonly float? MagnitudeMin;
+        public readonly float? MagnitudeMax;
+        public readonly float? PreWaitMin;
+        public readonly float? PreWaitMax;
+        public readonly float? DurationMin;
+        public readonly float? DurationMax;
+        public readonly float? PostWaitMin;
+        public readonly float? PostWaitMax;
     }
 
 
