@@ -25,6 +25,13 @@ namespace Enemy
                 _ => Presets.CritterWander
             };
 
+        // Movement Bounds: For Teleporting
+        public float minX = -10f;
+        public float maxX = 10f;
+        public float minZ = -7.5f;
+        public float maxZ = 7.5f;
+
+        // Internal Movement Tracker
         int QueuePosition { get; set; }
         Movement Current => Queue[QueuePosition];
 
@@ -32,12 +39,14 @@ namespace Enemy
         float _phaseStopwatch;
         Phase _phase = Phase.PreWait;
 
+        // Cached Random Values Of Current Movement
         float? _angle;
         float? _magnitude;
         float? _preWait;
         float? _duration;
         float? _postWait;
 
+        // Unity Components
         Rigidbody _rb;
 
         ////////////////////////////////////////
@@ -76,7 +85,10 @@ namespace Enemy
                     var direction = new Vector3(directionX, 0, directionZ);
                     var deltaMagnitude = Mathf.Lerp(0f, (float)_magnitude, Time.deltaTime / (float)_duration);
                     var deltaMove = direction * deltaMagnitude;
-                    _rb.MovePosition(transform.position + deltaMove);
+                    var finalX = Mathf.Clamp(transform.position.x + deltaMove.x, minX, maxX);
+                    var finalZ = Mathf.Clamp(transform.position.z + deltaMove.z, minZ, maxZ);
+                    var finalPosition = new Vector3(finalX, transform.position.y, finalZ);
+                    _rb.MovePosition(finalPosition);
 
                     if (_phaseStopwatch < _duration) break;
                     _phaseStopwatch = 0;
