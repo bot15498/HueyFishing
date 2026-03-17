@@ -38,6 +38,16 @@ namespace Enemy
         float? _duration;
         float? _postWait;
 
+        Rigidbody _rb;
+
+        ////////////////////////////////////////
+        // Init References
+        ////////////////////////////////////////
+        void Start()
+        {
+            _rb = GetComponent<Rigidbody>();
+        }
+
         ////////////////////////////////////////
         // Main Movement Loop
         ////////////////////////////////////////
@@ -66,7 +76,7 @@ namespace Enemy
                     var direction = new Vector3(directionX, 0, directionZ);
                     var deltaMagnitude = Mathf.Lerp(0f, (float)_magnitude, Time.deltaTime / (float)_duration);
                     var deltaMove = direction * deltaMagnitude;
-                    transform.position += deltaMove;
+                    _rb.MovePosition(transform.position + deltaMove);
 
                     if (_phaseStopwatch < _duration) break;
                     _phaseStopwatch = 0;
