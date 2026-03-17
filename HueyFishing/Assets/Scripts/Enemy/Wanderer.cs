@@ -25,11 +25,17 @@ namespace Enemy
                 _ => Presets.CritterWander
             };
 
-        // Movement Bounds: For Teleporting
-        public float minX = -10f;
-        public float maxX = 10f;
-        public float minZ = -7.5f;
-        public float maxZ = 7.5f;
+
+        // Movement Bounds: For Teleporting Movements
+        public float minX = -9f;
+        public float maxX = 9f;
+        public float minZ = -6f;
+        public float maxZ = 6f;
+
+
+        /// <summary> Rotate angle 180 degrees on Rigidbody collision. </summary>
+        public bool bounce = true;
+
 
         // Internal Movement Tracker
         int QueuePosition { get; set; }
@@ -39,6 +45,7 @@ namespace Enemy
         float _phaseStopwatch;
         Phase _phase = Phase.PreWait;
 
+
         // Cached Random Values Of Current Movement
         float? _angle;
         float? _magnitude;
@@ -46,8 +53,10 @@ namespace Enemy
         float? _duration;
         float? _postWait;
 
+
         // Unity Components
         Rigidbody _rb;
+
 
         ////////////////////////////////////////
         // Init References
@@ -56,6 +65,7 @@ namespace Enemy
         {
             _rb = GetComponent<Rigidbody>();
         }
+
 
         ////////////////////////////////////////
         // Main Movement Loop
@@ -85,11 +95,35 @@ namespace Enemy
                     var direction = new Vector3(directionX, 0, directionZ);
                     var deltaMagnitude = Mathf.Lerp(0f, (float)_magnitude, Time.deltaTime / (float)_duration);
                     var deltaMove = direction * deltaMagnitude;
-                    var finalX = Mathf.Clamp(transform.position.x + deltaMove.x, minX, maxX);
-                    var finalZ = Mathf.Clamp(transform.position.z + deltaMove.z, minZ, maxZ);
-                    var finalPosition = new Vector3(finalX, transform.position.y, finalZ);
-                    _rb.MovePosition(finalPosition);
+                    var position = transform.position + deltaMove;
+                    var isBounce = false;
 
+                    if (position.x < minX)
+                    {
+                        position.x = minX;
+                        isBounce = true;
+                    }
+                    else if (position.x > maxX)
+                    {
+                        position.x = maxX;
+                        isBounce = true;
+                    }
+
+                    if (position.z < minZ)
+                    {
+                        position.z = minZ;
+                        isBounce = true;
+                    }
+                    else if (position.z > maxZ)
+                    {
+                        position.z = maxZ;
+                        isBounce = true;
+                    }
+
+                    if (isBounce)
+                        _angle = (_angle + 180f) % 360f;
+
+                    _rb.MovePosition(position);
                     if (_phaseStopwatch < _duration) break;
                     _phaseStopwatch = 0;
                     _phase = Phase.PostWait;
@@ -102,6 +136,7 @@ namespace Enemy
                     break;
             }
         }
+
 
         ////////////////////////////////////////
         // Helper Functions
