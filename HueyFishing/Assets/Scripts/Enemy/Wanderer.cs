@@ -55,8 +55,9 @@ namespace Enemy
                     break;
 
                 case Phase.Move:
-                    var direction = new Vector3(Mathf.Sin(_angle * Mathf.Deg2Rad), 0,
-                        Mathf.Cos(_angle * Mathf.Deg2Rad));
+                    var directionX = Mathf.Sin(_angle * Mathf.Deg2Rad);
+                    var directionZ = Mathf.Cos(_angle * Mathf.Deg2Rad);
+                    var direction = new Vector3(directionX, 0, directionZ);
                     var deltaMagnitude = Mathf.Lerp(0f, _magnitude, Time.deltaTime / _duration);
                     var deltaMove = direction * deltaMagnitude;
                     transform.position += deltaMove;
