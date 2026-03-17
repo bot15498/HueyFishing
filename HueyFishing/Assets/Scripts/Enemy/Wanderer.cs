@@ -27,10 +27,10 @@ namespace Enemy
 
 
         // Movement Bounds: For Teleporting Movements
-        public float minX = -9f;
-        public float maxX = 9f;
-        public float minZ = -6f;
-        public float maxZ = 6f;
+        public float minX = -11f;
+        public float maxX = 11f;
+        public float minZ = -8f;
+        public float maxZ = 8f;
 
 
         /// <summary> Rotate angle 180 degrees on Rigidbody collision. </summary>
@@ -95,35 +95,11 @@ namespace Enemy
                     var direction = new Vector3(directionX, 0, directionZ);
                     var deltaMagnitude = Mathf.Lerp(0f, (float)_magnitude, Time.deltaTime / (float)_duration);
                     var deltaMove = direction * deltaMagnitude;
-                    var position = transform.position + deltaMove;
-                    var isBounce = false;
+                    var finalX = Mathf.Clamp(transform.position.x + deltaMove.x, minX, maxX);
+                    var finalZ = Mathf.Clamp(transform.position.z + deltaMove.z, minZ, maxZ);
+                    var finalPosition = new Vector3(finalX, transform.position.y, finalZ);
+                    _rb.MovePosition(finalPosition);
 
-                    if (position.x < minX)
-                    {
-                        position.x = minX;
-                        isBounce = true;
-                    }
-                    else if (position.x > maxX)
-                    {
-                        position.x = maxX;
-                        isBounce = true;
-                    }
-
-                    if (position.z < minZ)
-                    {
-                        position.z = minZ;
-                        isBounce = true;
-                    }
-                    else if (position.z > maxZ)
-                    {
-                        position.z = maxZ;
-                        isBounce = true;
-                    }
-
-                    if (isBounce)
-                        _angle = (_angle + 180f) % 360f;
-
-                    _rb.MovePosition(position);
                     if (_phaseStopwatch < _duration) break;
                     _phaseStopwatch = 0;
                     _phase = Phase.PostWait;
@@ -135,6 +111,16 @@ namespace Enemy
                     CacheMovement();
                     break;
             }
+        }
+
+
+        ////////////////////////////////////////
+        // Bounce on Rigidbody Collision
+        ////////////////////////////////////////
+        void OnCollisionEnter(Collision other)
+        {
+            if (bounce)
+                _angle = (_angle + 180f) % 360f;
         }
 
 
