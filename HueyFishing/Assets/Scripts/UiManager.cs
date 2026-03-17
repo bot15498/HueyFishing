@@ -26,7 +26,8 @@ public class UiManager : MonoBehaviour
 
     public void endFishingUI()
     {
-
+        boatUI.SetActive(true);
+        fishingUI.SetActive(false);
 
 
     }

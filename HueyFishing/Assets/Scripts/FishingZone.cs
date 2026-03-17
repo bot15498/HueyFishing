@@ -32,12 +32,12 @@ public class FishingZone : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(canstartfishing == true && Input.GetKeyDown(KeyCode.F))
+        if (canstartfishing == true && Input.GetKeyDown(KeyCode.F))
         {
             startFishing();
         }
-       
-        
+
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -55,7 +55,7 @@ public class FishingZone : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             canstartfishing = true;
-         
+
         }
     }
 
@@ -83,6 +83,16 @@ public class FishingZone : MonoBehaviour
 
     }
 
+    public void StopFishing()
+    {
+        // Return camera to normal
+        player.GetComponent<Boat>().toggleCanmove();
+        cmanager.switchCamera(cmanager.boatCamera);
+        uiManager.endFishingUI();
+
+        drawingManager.canDraw = false;
+    }
+
     public void MoveBoat()
     {
         if (ParkSpot == null) return;
@@ -94,7 +104,7 @@ public class FishingZone : MonoBehaviour
             ParkSpot.position.z
         );
 
-        
+
         moveTween?.Kill();
 
         moveTween = player.transform.DOMove(targetPos, moveDuration);

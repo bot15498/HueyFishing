@@ -63,6 +63,14 @@ public class DrawingManager : MonoBehaviour
                 drawDelayCurrTime -= Time.deltaTime;
             }
         }
+        else
+        {
+            // Clear any segments if they are active
+            if (segments.Count > 0 || fishingLine != null)
+            {
+                DeleteAllSegments();
+            }
+        }
     }
 
     public void TriggerCatchCircleComplete(int firstid, int lastid)
@@ -99,7 +107,7 @@ public class DrawingManager : MonoBehaviour
 
     public void TriggerLineBreak()
     {
-        if(!playerHealthManager.isLineUnbreakable)
+        if (!playerHealthManager.isLineUnbreakable)
         {
             // Makes it so the line is broken and the player has to restart
             // Also puts a delay before the player can start drawing a line again
@@ -226,7 +234,7 @@ public class DrawingManager : MonoBehaviour
 
     public void DeleteSegment(CatchTrailCollider segsToDelete)
     {
-        if(segments.Count > 1)
+        if (segments.Count > 1)
         {
             segments.Remove(segsToDelete);
             Destroy(segsToDelete.gameObject);
