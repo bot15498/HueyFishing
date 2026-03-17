@@ -9,6 +9,7 @@ public class DrawingManager : MonoBehaviour
     public float maxSegmentLength = 1f;
     public float segmentWidth = 1f;
     public float drawDelayAfterBreak = 0.5f;
+    public bool canDraw = false;
     [SerializeField]
     private Material lineMaterial;
     [SerializeField]
@@ -33,31 +34,34 @@ public class DrawingManager : MonoBehaviour
 
     void Update()
     {
-        // Methodology:
-        // When left mouse is clicked, track where the cursor is on the floor. Save the initial point and create a trigger 
-        // As cursor moves, change size of trigger to draw betwen the original point and the cursor.
-        // When left click is released, delete all triggers
-        if (Input.GetMouseButton(0) && drawDelayCurrTime <= 0)
+        if (canDraw)
         {
-            // Start drawing
-            DrawSegments();
-
-            // Do a check to see if we shouldn't be able to be drawing right now
-            if (clearSegmentsOnNextCycle)
+            // Methodology:
+            // When left mouse is clicked, track where the cursor is on the floor. Save the initial point and create a trigger 
+            // As cursor moves, change size of trigger to draw betwen the original point and the cursor.
+            // When left click is released, delete all triggers
+            if (Input.GetMouseButton(0) && drawDelayCurrTime <= 0)
             {
-                DeleteAllSegments();
-                clearSegmentsOnNextCycle = false;
-            }
-        }
-        else
-        {
-            // Release mouse click, clear everything
-            DeleteAllSegments();
-        }
+                // Start drawing
+                DrawSegments();
 
-        if (drawDelayCurrTime > 0)
-        {
-            drawDelayCurrTime -= Time.deltaTime;
+                // Do a check to see if we shouldn't be able to be drawing right now
+                if (clearSegmentsOnNextCycle)
+                {
+                    DeleteAllSegments();
+                    clearSegmentsOnNextCycle = false;
+                }
+            }
+            else
+            {
+                // Release mouse click, clear everything
+                DeleteAllSegments();
+            }
+
+            if (drawDelayCurrTime > 0)
+            {
+                drawDelayCurrTime -= Time.deltaTime;
+            }
         }
     }
 

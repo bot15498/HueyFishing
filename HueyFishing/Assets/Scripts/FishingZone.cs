@@ -15,6 +15,7 @@ public class FishingZone : MonoBehaviour
     public Transform ParkSpot;
     public float moveDuration = 1f;
     UiManager uiManager;
+    private DrawingManager drawingManager;
 
     Tween moveTween;
 
@@ -25,6 +26,7 @@ public class FishingZone : MonoBehaviour
         gamemanager = GameObject.FindGameObjectWithTag("GameManager");
         cmanager = gamemanager.GetComponent<CameraManager>();
         uiManager = gamemanager.GetComponent<UiManager>();
+        drawingManager = gamemanager.GetComponent<DrawingManager>();
     }
 
     // Update is called once per frame
@@ -75,9 +77,10 @@ public class FishingZone : MonoBehaviour
 
 
         //add start fishing stuff here
+        drawingManager.canDraw = true;
 
         //battle intro
-        
+
     }
 
     public void MoveBoat()
