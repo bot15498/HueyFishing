@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CatchingTrail
   - CatchingFloor
+  - GameManager
   layers:
   - Default
   - TransparentFX
