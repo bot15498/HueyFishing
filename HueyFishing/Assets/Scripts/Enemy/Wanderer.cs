@@ -32,6 +32,8 @@ namespace Enemy
         public float minZ = -8f;
         public float maxZ = 8f;
 
+        /// <summary> If bounds are exceeded, move back from bounds by this amount, to avoid getting stuck in walls. </summary>
+        public float margin = 1f;
 
         /// <summary> Rotate angle 180 degrees on Rigidbody collision. </summary>
         public bool bounce = true;
@@ -95,11 +97,19 @@ namespace Enemy
                     var direction = new Vector3(directionX, 0, directionZ);
                     var deltaMagnitude = Mathf.Lerp(0f, (float)_magnitude, Time.deltaTime / (float)_duration);
                     var deltaMove = direction * deltaMagnitude;
-                    var finalX = Mathf.Clamp(transform.position.x + deltaMove.x, minX, maxX);
-                    var finalZ = Mathf.Clamp(transform.position.z + deltaMove.z, minZ, maxZ);
-                    var finalPosition = new Vector3(finalX, transform.position.y, finalZ);
-                    _rb.MovePosition(finalPosition);
+                    var position = transform.position + deltaMove;
 
+                    if (position.x < minX)
+                        position.x = minX + margin;
+                    else if (position.x > maxX)
+                        position.x = maxX - margin;
+
+                    if (position.z < minZ)
+                        position.z = minZ + margin;
+                    else if (position.z > maxZ)
+                        position.z = maxZ - margin;
+
+                    _rb.MovePosition(position);
                     if (_phaseStopwatch < _duration) break;
                     _phaseStopwatch = 0;
                     _phase = Phase.PostWait;
