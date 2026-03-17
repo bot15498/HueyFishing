@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - CatchingTrail
+  - CatchingFloor
   layers:
   - Default
   - TransparentFX
