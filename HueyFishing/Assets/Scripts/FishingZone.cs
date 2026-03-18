@@ -125,6 +125,7 @@ public class FishingZone : MonoBehaviour
 
         Debug.Log("delay");
         //add start fishing stuff here
+        //enable fishing hud and animation. 
         drawingManager.canDraw = true;
 
         //Do the action after the delay time has finished.
