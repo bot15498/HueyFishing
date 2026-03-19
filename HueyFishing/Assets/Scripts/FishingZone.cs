@@ -10,10 +10,9 @@ public class FishingZone : MonoBehaviour
 
     public GameObject gamemanager;
     CameraManager cmanager;
-    public GameObject boatlocationStorage;
     public CinemachineCamera FishingCamera;
     public FishingRegion regionType;
-    bool canstartfishing;
+    public bool canstartfishing;
     public bool isFishing = false;
     public bool isSpawningFish = false;
     public Transform ParkSpot;
@@ -22,7 +21,14 @@ public class FishingZone : MonoBehaviour
     private DrawingManager drawingManager;
     private FishManager fishManager;
     public List<GameObject> fishPrefabs;
-    public List<Vector3> fishStartPositions;
+  
+    public Collider thisCollider;
+    FishingZoneManager fishingzoneManager;
+    FishingZone thisFishingZone;
+    UnlockManager unlockManager;
+    public GameObject[] FishSpawns;
+
+    public int fishingUnlockID;
 
     Tween moveTween;
 
@@ -37,6 +43,10 @@ public class FishingZone : MonoBehaviour
         uiManager = gamemanager.GetComponent<UiManager>();
         drawingManager = gamemanager.GetComponent<DrawingManager>();
         fishManager = gamemanager.GetComponent<FishManager>();
+        thisCollider = gameObject.GetComponent<Collider>();
+        fishingzoneManager = gamemanager.GetComponent<FishingZoneManager>();
+        thisFishingZone = gameObject.GetComponent<FishingZone>();
+        unlockManager = gamemanager.GetComponent<UnlockManager>();
     }
 
     // Update is called once per frame
@@ -47,12 +57,15 @@ public class FishingZone : MonoBehaviour
             isFishing = true;
             isSpawningFish = true;
             startFishing();
+            canstartfishing = false;
         }
         else if (isFishing && !isSpawningFish && CheckForFishingDone())
         {
+
+
             Debug.Log("You caught all the fish");
-            isFishing = false;
-            StopFishing();
+
+            fishingzoneManager.clearFishingZone(true);
         }
     }
 
@@ -90,6 +103,8 @@ public class FishingZone : MonoBehaviour
         uiManager.startFishingUI();
         Debug.Log("Now Fishing");
         MoveBoat();
+        thisCollider.enabled = false;
+        fishingzoneManager.setfishingZone(thisFishingZone);
 
         //fihsing zone intro and delay
         //disable starting fishing zone mesh and trigger collider
@@ -103,14 +118,32 @@ public class FishingZone : MonoBehaviour
 
     }
 
-    public void StopFishing()
+    public void StopFishing(bool playerWin)
     {
         // Return camera to normal
         player.GetComponent<Boat>().toggleCanmove();
         cmanager.switchCamera(cmanager.boatCamera);
         uiManager.endFishingUI();
 
+        thisCollider.enabled = true;
+
         drawingManager.canDraw = false;
+        fishManager.Cleanup();
+        isFishing = false;
+        if (playerWin == true)
+        {
+            //trigger any win stuff here
+            unlockManager.fishUnlock(fishingUnlockID);
+
+            Debug.Log("fishwin");
+            gameObject.SetActive(false);
+
+        }
+
+        //canstartfishing = true;
+
+        
+
     }
 
     public void MoveBoat()
@@ -150,35 +183,41 @@ public class FishingZone : MonoBehaviour
         isSpawningFish = true;
         // Animate fish swim in.
         // Just raise them from the bottom
+
         List<GameObject> fishSpawned = new List<GameObject>();
         for (int i = 0; i < fishPrefabs.Count; i++)
         {
-            var startingPos = fishStartPositions[i];
-            startingPos.y = -5;
-            fishSpawned.Add(Instantiate(fishPrefabs[i], startingPos, Quaternion.identity));
+            
+            fishSpawned.Add(Instantiate(fishPrefabs[i], FishSpawns[i].transform.position, Quaternion.identity));
         }
 
-        while (fishSpawned[0].transform.position.y < fishStartPositions[0].y - 0.1f)
+        /*while (fishSpawned[0].transform.position.y < fishStartPositions[0].y - 0.1f)
         {
             // Have fish raise up.
             for (int i = 0; i < fishPrefabs.Count; i++)
             {
                 fishSpawned[i].transform.position = Vector3.MoveTowards(fishSpawned[i].transform.position, fishStartPositions[i], 7f * Time.deltaTime);
             }
-            yield return null;
-        }
-
+           
+        }*/
+        
         // Fill the current fish list
         fishManager.currentFish.Clear();
         foreach (var fis in fishSpawned)
         {
             fishManager.currentFish.Add(fis.GetComponent<FishCatchbar>());
+
         }
+
         isSpawningFish = false;
+
+        yield return null;
     }
 
     private bool CheckForFishingDone()
     {
+        
+        
         bool done = true;
         foreach(var fish in fishManager.currentFish)
         {
@@ -189,4 +228,9 @@ public class FishingZone : MonoBehaviour
         }
         return done;
     }
+
+
+
+
+
 }

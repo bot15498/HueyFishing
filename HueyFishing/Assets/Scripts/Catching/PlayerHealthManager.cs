@@ -26,6 +26,7 @@ public class PlayerHealthManager : MonoBehaviour
     private UiManager uiManager;
     private CameraManager cmanager;
     private GameObject player;
+    FishingZoneManager fishingZoneManager;
 
     void Start()
     {
@@ -34,6 +35,7 @@ public class PlayerHealthManager : MonoBehaviour
         cmanager = GetComponent<CameraManager>();
         drawManager = GetComponent<DrawingManager>();
         player = GameObject.FindGameObjectWithTag("Player");
+        fishingZoneManager = gameObject.GetComponent<FishingZoneManager>();
 
         currHealth = maxHealth;
         currBarGuage = 0;
@@ -74,11 +76,7 @@ public class PlayerHealthManager : MonoBehaviour
 
     public void FinishFishing()
     {
-        player.GetComponent<Boat>().toggleCanmove();
-        cmanager.switchCamera(cmanager.boatCamera);
-        uiManager.endFishingUI();
-
-        drawManager.canDraw = false;
+        fishingZoneManager.clearFishingZone(false);
 
         currHealth = maxHealth;
         currBarGuage = 0;
