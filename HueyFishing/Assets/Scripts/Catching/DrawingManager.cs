@@ -22,6 +22,7 @@ public class DrawingManager : MonoBehaviour
     private PlayerHealthManager playerHealthManager;
     private float drawDelayCurrTime = 0f;
     private bool alreadyDoingCircleDetection = false;
+    public float CatchAllowDelay = 0.2f;
     [Header("After Image Parameters")]
     public float afterImageFadeOutTime = 0.3f;
     [SerializeField]
@@ -111,7 +112,7 @@ public class DrawingManager : MonoBehaviour
         // Spawn a after image line renderer in the shape of the circle
         StartCoroutine(SpawnAfterImageCircle(segmentPoints));
 
-        alreadyDoingCircleDetection = false;
+        StartCoroutine(DelayBeforeAllowingCirclAgain());
     }
 
     public void TriggerLineBreak()
@@ -321,5 +322,11 @@ public class DrawingManager : MonoBehaviour
 
         // Delete
         Destroy(afterImageObj);
+    }
+
+    private IEnumerator DelayBeforeAllowingCirclAgain()
+    {
+        yield return new WaitForSeconds(CatchAllowDelay);
+        alreadyDoingCircleDetection = false;
     }
 }
