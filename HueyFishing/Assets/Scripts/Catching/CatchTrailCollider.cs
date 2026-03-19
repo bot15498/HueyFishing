@@ -11,6 +11,7 @@ public class CatchTrailCollider : MonoBehaviour
     public Vector3 endpoint = Vector3.zero;
     public DrawingManager drawingManager;
     private float currTime = 0f;
+    public bool isDoingCircleCheck = false;
 
     private void Update()
     {
@@ -30,10 +31,11 @@ public class CatchTrailCollider : MonoBehaviour
             // Do a check to make sure we are at least two segments away from the last trail segment
             // Also make sure to fire the cross only on the larger id
             CatchTrailCollider otherCtc = other.gameObject.GetComponent<CatchTrailCollider>();
-            if (otherCtc != null && Mathf.Abs(id - otherCtc.id) > 2 && id > otherCtc.id)
+            if (!isDoingCircleCheck && !otherCtc.isDoingCircleCheck && otherCtc != null && Mathf.Abs(id - otherCtc.id) > 2 && id > otherCtc.id)
             {
-                // Decalre a cross
-                //Debug.Log(other);
+                // Turn a flag on both the colliders, so they won't double count
+                isDoingCircleCheck = true;
+                otherCtc.isDoingCircleCheck = true;
                 // Tell the drawing manager to delete on the next cycle.
                 drawingManager.TriggerCatchCircleComplete(otherCtc.id, id);
             }
