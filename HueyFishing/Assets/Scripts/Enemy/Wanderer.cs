@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Debug = System.Diagnostics.Debug;
 using Random = UnityEngine.Random;
+using SerializeProperty;
 
 namespace Enemy
 {
@@ -16,20 +17,23 @@ namespace Enemy
     /// </remarks>
     public class Wanderer : MonoBehaviour
     {
-        public Preset movementPreset = Preset.CritterWander;
+        List<Movement> _queue;
 
-        List<Movement> Queue =>
-            movementPreset switch
+        [Serialize("MovementPreset")] public Preset movementPreset;
+
+        public Preset MovementPreset
+        {
+            get => movementPreset;
+            set
             {
-                Preset.CritterWander => Presets.CritterWander,
-                Preset.JitterCircle => Presets.JitterCircle,
-                Preset.PingPong => Presets.PingPong,
-                Preset.RampingBull => Presets.RampingBull,
-                _ => Presets.CritterWander
-            };
+                movementPreset = value;
+                InitMovement();
+                CacheMovement();
+            }
+        }
 
 
-        // Movement Bounds: For Teleporting Movements
+        // Movement bounds: For Teleporting Movements
         public float minX = -11f;
         public float maxX = 11f;
         public float minZ = -8f;
@@ -44,9 +48,8 @@ namespace Enemy
 
         // Internal Movement Tracker
         int QueuePosition { get; set; }
-        Movement Current => Queue[QueuePosition];
+        Movement Current => _queue[QueuePosition];
 
-        bool _hasMovement;
         float _phaseStopwatch;
         Phase _phase = Phase.PreWait;
 
@@ -64,11 +67,13 @@ namespace Enemy
 
 
         ////////////////////////////////////////
-        // Init References
+        // Init References And Read Serialized
         ////////////////////////////////////////
         void Start()
         {
             _rb = GetComponent<Rigidbody>();
+            InitMovement();
+            CacheMovement();
         }
 
 
@@ -77,7 +82,6 @@ namespace Enemy
         ////////////////////////////////////////
         void FixedUpdate()
         {
-            if (!InitMovement()) return;
             Debug.Assert(_angle != null, nameof(_angle) + " != null");
             Debug.Assert(_magnitude != null, nameof(_magnitude) + " != null");
             Debug.Assert(_preWait != null, nameof(_preWait) + " != null");
@@ -120,7 +124,7 @@ namespace Enemy
 
                 case Phase.PostWait:
                     if (_phaseStopwatch < _postWait) break;
-                    QueuePosition = (QueuePosition + 1) % Queue.Count;
+                    QueuePosition = (QueuePosition + 1) % _queue.Count;
                     CacheMovement();
                     break;
             }
@@ -130,7 +134,7 @@ namespace Enemy
         ////////////////////////////////////////
         // Bounce on Rigidbody Collision
         ////////////////////////////////////////
-        void OnCollisionEnter(Collision other)
+        void OnCollisionEnter(Collision _)
         {
             if (bounce)
                 _angle = (_angle + 180f) % 360f;
@@ -140,29 +144,25 @@ namespace Enemy
         ////////////////////////////////////////
         // Helper Functions
         ////////////////////////////////////////
-        bool InitMovement()
+        void InitMovement()
         {
-            if (Queue.Count == 0)
+            var queue = movementPreset switch
             {
-                _hasMovement = false;
-                return false;
-            }
-
-            if (_hasMovement)
-            {
-                QueuePosition = Math.Min(QueuePosition, Queue.Count - 1);
-                return true;
-            }
-
-            CacheMovement();
-            return true;
+                Preset.CritterWander => Presets.CritterWander,
+                Preset.JitterCircle => Presets.JitterCircle,
+                Preset.PingPong => Presets.PingPong,
+                Preset.RampingBull => Presets.RampingBull,
+                _ => Presets.CritterWander
+            };
+            if (queue.Count <= 0)
+                throw new ArgumentException($"Movement preset {nameof(movementPreset)} has no movements.");
+            _queue = queue;
         }
 
 
         void CacheMovement()
         {
-            QueuePosition = Math.Min(QueuePosition, Queue.Count - 1);
-            _hasMovement = true;
+            QueuePosition = Math.Min(QueuePosition, _queue.Count - 1);
             _phaseStopwatch = 0;
             _phase = Phase.PreWait;
 

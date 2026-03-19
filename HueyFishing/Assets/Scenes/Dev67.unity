@@ -623,7 +623,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2ca926f4ed341a1a5c8f0e21f68ca50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Enemy::Enemy.Wanderer
-  movementPreset: 3
+  movementPreset: 0
   minX: -11
   maxX: 11
   minZ: -8
