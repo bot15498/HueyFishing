@@ -5,7 +5,7 @@ public class PlayerHealthManager : MonoBehaviour
     [Header("Main Player Stats")]
     public int currHealth = 100;
     public int maxHealth = 100;
-    public int currBarGuage = 100;
+    public int currBarGuage = 0;
     public int maxBarGuage = 100;
     public int abilityCost = 25;
     [Header("Other Player Stats")]
@@ -21,9 +21,22 @@ public class PlayerHealthManager : MonoBehaviour
     public bool isLongerLine = false;
     public bool isShootingProjectiles = false;
 
+    private FishManager fishManager;
+    private DrawingManager drawManager;
+    private UiManager uiManager;
+    private CameraManager cmanager;
+    private GameObject player;
+
     void Start()
     {
+        fishManager = GetComponent<FishManager>();
+        uiManager = GetComponent<UiManager>();
+        cmanager = GetComponent<CameraManager>();
+        drawManager = GetComponent<DrawingManager>();
+        player = GameObject.FindGameObjectWithTag("Player");
 
+        currHealth = maxHealth;
+        currBarGuage = 0;
     }
 
     // Update is called once per frame
@@ -33,6 +46,11 @@ public class PlayerHealthManager : MonoBehaviour
         circlePower = isDoubleCatchRate ? baseCirclePower * 2 : baseCirclePower;
         maxLineLength = isLongerLine ? Mathf.RoundToInt(baseMaxLineLength * 1.5f) : baseMaxLineLength;
         //segmentTimeoutTime = isLongerLine ? baseSegmentTimeoutTime * 1.5f : baseSegmentTimeoutTime;
+
+        if (player == null)
+        {
+            player = GameObject.FindGameObjectWithTag("Player");
+        }
     }
 
     public void DoDamageToPlayer(int damage)
@@ -44,6 +62,7 @@ public class PlayerHealthManager : MonoBehaviour
             {
                 // die
                 Debug.Log("Player died");
+                FinishFishing();
             }
         }
     }
@@ -51,5 +70,17 @@ public class PlayerHealthManager : MonoBehaviour
     public void AddPlayerAbilityGuage(int value)
     {
         currBarGuage = Mathf.Clamp(currBarGuage + value, 0, maxBarGuage);
+    }
+
+    public void FinishFishing()
+    {
+        player.GetComponent<Boat>().toggleCanmove();
+        cmanager.switchCamera(cmanager.boatCamera);
+        uiManager.endFishingUI();
+
+        drawManager.canDraw = false;
+
+        currHealth = maxHealth;
+        currBarGuage = 0;
     }
 }
