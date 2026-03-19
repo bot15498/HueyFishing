@@ -189,6 +189,8 @@ public class FishingZone : MonoBehaviour
         {
             
             fishSpawned.Add(Instantiate(fishPrefabs[i], FishSpawns[i].transform.position, Quaternion.identity));
+            fishSpawned[i].GetComponent<FishMovement>().fishSpawnCenter = FishSpawns[i];
+
         }
 
         /*while (fishSpawned[0].transform.position.y < fishStartPositions[0].y - 0.1f)
