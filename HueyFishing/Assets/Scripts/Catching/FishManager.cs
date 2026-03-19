@@ -31,24 +31,35 @@ public class FishManager : MonoBehaviour
 
     private IEnumerator DoCleanup()
     {
-        if (currentFish.Count > 0)
+
+        // Animation to have fish swim away
+
+        /*while (currentFish[0].transform.position.y > -1)
         {
-            // Animation to have fish swim away
-            while (currentFish[0].transform.position.y > -1)
+            // Have fish sink into the floor
+            foreach (var fish in currentFish)
             {
-                // Have fish sink into the floor
-                foreach (var fish in currentFish)
-                {
-                    var targetPos = fish.transform.position;
-                    targetPos.y = -5;
-                    fish.transform.position = Vector3.MoveTowards(transform.position, targetPos, 1f * Time.deltaTime);
-                }
-                yield return null;
+                var targetPos = fish.transform.position;
+                targetPos.y = -5;
+                fish.transform.position = Vector3.MoveTowards(transform.position, targetPos, 1f * Time.deltaTime);
             }
+
+        }*/
+
+        foreach (FishCatchbar obj in currentFish)
+        {
+            Destroy(obj.gameObject);
         }
 
+        //Destroy(currentFish[0]);
+            
+
+
+        
+
         // Delete them
-        //currentFish.Clear();
+        currentFish.Clear();
+         yield return null;
     }
 
     

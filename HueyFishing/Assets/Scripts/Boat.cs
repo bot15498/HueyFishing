@@ -140,6 +140,8 @@ public class Boat : MonoBehaviour
     public void toggleCanmove()
     {
         canMove = !canMove;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
     }
 
     void StartRocking()
