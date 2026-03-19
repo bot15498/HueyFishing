@@ -12,11 +12,13 @@ public class FishingZone : MonoBehaviour
     CameraManager cmanager;
     public GameObject boatlocationStorage;
     public CinemachineCamera FishingCamera;
+    public FishingRegion regionType;
     bool canstartfishing;
     public Transform ParkSpot;
     public float moveDuration = 1f;
     UiManager uiManager;
     private DrawingManager drawingManager;
+    private FishManager fishManager;
 
     Tween moveTween;
 
@@ -30,6 +32,7 @@ public class FishingZone : MonoBehaviour
         cmanager = gamemanager.GetComponent<CameraManager>();
         uiManager = gamemanager.GetComponent<UiManager>();
         drawingManager = gamemanager.GetComponent<DrawingManager>();
+        fishManager = gamemanager.GetComponent<FishManager>();
     }
 
     // Update is called once per frame
@@ -126,6 +129,7 @@ public class FishingZone : MonoBehaviour
         Debug.Log("delay");
         //add start fishing stuff here
         drawingManager.canDraw = true;
+        fishManager.SpawnFishForRegion(regionType);
 
         //Do the action after the delay time has finished.
     }

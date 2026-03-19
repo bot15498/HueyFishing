@@ -685,7 +685,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &352281652
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1524,6 +1524,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishManager
   testFishPrefab: {fileID: 6373636876271414468, guid: b777a4c28f7e45a4b84b7b2634c4d13a, type: 3}
+  timmyFishPrefab: {fileID: 2290302650995684043, guid: cf22832fcde828646b2ad4954dcb635b, type: 3}
   currentFish: []
 --- !u!114 &1008659286
 MonoBehaviour:
@@ -11106,6 +11107,7 @@ MonoBehaviour:
   gamemanager: {fileID: 0}
   boatlocationStorage: {fileID: 0}
   FishingCamera: {fileID: 962215983}
+  regionType: 0
   ParkSpot: {fileID: 116768521}
   moveDuration: 2
   delayTime: 4
