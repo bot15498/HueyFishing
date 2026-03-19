@@ -6,44 +6,70 @@ using static UnityEngine.Rendering.HableCurve;
 public class DrawingManager : MonoBehaviour
 {
     public Camera currCamera;
-    public int maxNumTrailSegments = 20;
     public float maxSegmentLength = 1f;
     public float segmentWidth = 1f;
+    public float drawDelayAfterBreak = 0.5f;
+    public bool canDraw = false;
+    [SerializeField]
+    private Material lineMaterial;
     [SerializeField]
     private Vector3 startingPoint = Vector3.zero;
     [SerializeField]
     private List<CatchTrailCollider> segments = new List<CatchTrailCollider>();
     [SerializeField]
     private CatchTrailCollider lastSegment = null;
+    private GameObject fishingLine = null;
     private bool clearSegmentsOnNextCycle = false;
     private FishManager fishManager;
+    private PlayerHealthManager playerHealthManager;
+    private float drawDelayCurrTime = 0f;
 
     void Start()
     {
         startingPoint = Vector3.zero;
         segments = new List<CatchTrailCollider>();
         fishManager = GetComponent<FishManager>();
+        playerHealthManager = GetComponent<PlayerHealthManager>();
     }
 
     void Update()
     {
-        // Methodology:
-        // When left mouse is clicked, track where the cursor is on the floor. Save the initial point and create a trigger 
-        // As cursor moves, change size of trigger to draw betwen the original point and the cursor.
-        // When left click is released, delete all triggers
-        if (Input.GetMouseButton(0))
+        if (canDraw)
         {
-            DrawSegments();
-            if (clearSegmentsOnNextCycle)
+            // Methodology:
+            // When left mouse is clicked, track where the cursor is on the floor. Save the initial point and create a trigger 
+            // As cursor moves, change size of trigger to draw betwen the original point and the cursor.
+            // When left click is released, delete all triggers
+            if (Input.GetMouseButton(0) && drawDelayCurrTime <= 0)
             {
+                // Start drawing
+                DrawSegments();
+
+                // Do a check to see if we shouldn't be able to be drawing right now
+                if (clearSegmentsOnNextCycle)
+                {
+                    DeleteAllSegments();
+                    clearSegmentsOnNextCycle = false;
+                }
+            }
+            else
+            {
+                // Release mouse click, clear everything
                 DeleteAllSegments();
-                clearSegmentsOnNextCycle = false;
+            }
+
+            if (drawDelayCurrTime > 0)
+            {
+                drawDelayCurrTime -= Time.deltaTime;
             }
         }
         else
         {
-            // Release mouse click, clear everything
-            DeleteAllSegments();
+            // Clear any segments if they are active
+            if (segments.Count > 0 || fishingLine != null)
+            {
+                DeleteAllSegments();
+            }
         }
     }
 
@@ -52,14 +78,14 @@ public class DrawingManager : MonoBehaviour
         // Called when triggers detect that there is circle closure.
         // Get the list of segments that  we care about
         var segmentPoints = new List<Vector3>();
-        foreach(var segs in segments)
+        foreach (var segs in segments)
         {
-            if(segs.id > lastid)
+            if (segs.id > lastid)
             {
                 // Done
                 break;
             }
-            if(segs.id >= firstid || segs.id <= lastid)
+            if (segs.id >= firstid || segs.id <= lastid)
             {
                 segmentPoints.Add(segs.startpoint);
                 segmentPoints.Add(segs.endpoint);
@@ -71,12 +97,36 @@ public class DrawingManager : MonoBehaviour
         {
             if (fish != null && IsPointInPolygon(fish.transform.position, segmentPoints))
             {
-                fish.IncreaseCatchBar();
+                fish.IncreaseCatchBar(playerHealthManager.circlePower);
             }
         }
 
         // Stage to delete segments since we are done with them now
         clearSegmentsOnNextCycle = true;
+    }
+
+    public void TriggerLineBreak()
+    {
+        if (!playerHealthManager.isLineUnbreakable)
+        {
+            // Makes it so the line is broken and the player has to restart
+            // Also puts a delay before the player can start drawing a line again
+            clearSegmentsOnNextCycle = true;
+
+            // Also make it so there is a small delay before you can draw again to prevent
+            // players from breaking the line again
+            drawDelayCurrTime = drawDelayAfterBreak;
+        }
+    }
+
+    public void DoDamageToPlayer(int damage)
+    {
+        playerHealthManager.DoDamageToPlayer(damage);
+    }
+
+    public void BuildPlayerAbilityGuage(int amount = 10)
+    {
+        playerHealthManager.AddPlayerAbilityGuage(amount);
     }
 
     private void DrawSegments()
@@ -88,7 +138,10 @@ public class DrawingManager : MonoBehaviour
             //Debug.Log(hit.point);
             if (startingPoint == Vector3.zero)
             {
-                // Starting case
+                // Starting case. Create an object to hold the line renderer
+                CreateLineRenderer();
+
+                // Now draw the line
                 startingPoint = hit.point;
                 CreateSegmentObject(hit.point);
             }
@@ -106,6 +159,9 @@ public class DrawingManager : MonoBehaviour
             {
                 // Update the parameters of the current trigger
                 UpdateSegmentSize(lastSegment, startingPoint, hit.point);
+
+                // Update the line renderer
+                UpdateLineRenderer();
             }
         }
     }
@@ -122,9 +178,11 @@ public class DrawingManager : MonoBehaviour
 
         Rigidbody rb = go.AddComponent<Rigidbody>();
         rb.useGravity = false;
+        rb.isKinematic = true;
 
         CatchTrailCollider ctc = go.AddComponent<CatchTrailCollider>();
         ctc.drawingManager = this;
+        ctc.timeoutTime = playerHealthManager.segmentTimeoutTime;
         if (segments.Count > 0)
         {
             ctc.id = segments.Last().id + 1;
@@ -146,14 +204,13 @@ public class DrawingManager : MonoBehaviour
         BoxCollider segsTrigger = segs.GetComponent<BoxCollider>();
         segsTrigger.size = new Vector3(segmentWidth, segmentWidth, Vector3.Distance(startpoint, endpoint));
 
-        CatchTrailCollider ctc = segs.GetComponent<CatchTrailCollider>();
-        ctc.startpoint = startpoint;
-        ctc.endpoint = endpoint;
+        segs.startpoint = startpoint;
+        segs.endpoint = endpoint;
     }
 
     private void MaxSegmentCheck()
     {
-        if (segments.Count > maxNumTrailSegments)
+        if (segments.Count > playerHealthManager.maxLineLength)
         {
             // Delete the head of the list
             GameObject todelete = segments[0].gameObject;
@@ -170,8 +227,18 @@ public class DrawingManager : MonoBehaviour
         }
         segments.Clear();
         lastSegment = null;
+        DeleteLineRenderer();
 
         startingPoint = Vector3.zero;
+    }
+
+    public void DeleteSegment(CatchTrailCollider segsToDelete)
+    {
+        if (segments.Count > 1)
+        {
+            segments.Remove(segsToDelete);
+            Destroy(segsToDelete.gameObject);
+        }
     }
 
     private bool IsPointInPolygon(Vector3 target, List<Vector3> polygonPoints)
@@ -194,5 +261,35 @@ public class DrawingManager : MonoBehaviour
         }
 
         return inside;
+    }
+
+    private void CreateLineRenderer()
+    {
+        fishingLine = new GameObject("Fishing Line");
+        var renderer = fishingLine.AddComponent<LineRenderer>();
+        renderer.startWidth = segmentWidth;
+        renderer.material = lineMaterial;
+        //renderer.numCornerVertices = 3;
+    }
+
+    private void DeleteLineRenderer()
+    {
+        Destroy(fishingLine);
+    }
+
+    private void UpdateLineRenderer()
+    {
+        if (fishingLine != null)
+        {
+            LineRenderer renderer = fishingLine.GetComponent<LineRenderer>();
+            renderer.positionCount = segments.Count * 2;
+            int rendererPos = 0;
+            foreach (var segs in segments)
+            {
+                renderer.SetPosition(rendererPos, segs.startpoint + Vector3.up * segmentWidth * 0.5f);
+                renderer.SetPosition(rendererPos + 1, segs.endpoint + Vector3.up * segmentWidth * 0.5f);
+                rendererPos += 2;
+            }
+        }
     }
 }

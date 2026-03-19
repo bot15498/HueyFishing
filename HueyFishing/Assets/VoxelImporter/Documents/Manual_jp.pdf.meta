@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e9b3d385cb072b34da27cc0ae51b6039
+timeCreated: 1466675975
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.3
+  assetPath: Assets/VoxelImporter/Documents/Manual_jp.pdf
+  uploadId: 858062
