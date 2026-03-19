@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,19 +11,21 @@ public class DrawingManager : MonoBehaviour
     public float segmentWidth = 1f;
     public float drawDelayAfterBreak = 0.5f;
     public bool canDraw = false;
-    [SerializeField]
-    private Material lineMaterial;
-    [SerializeField]
+    public Material lineMaterial;
     private Vector3 startingPoint = Vector3.zero;
     [SerializeField]
     private List<CatchTrailCollider> segments = new List<CatchTrailCollider>();
-    [SerializeField]
     private CatchTrailCollider lastSegment = null;
     private GameObject fishingLine = null;
     private bool clearSegmentsOnNextCycle = false;
     private FishManager fishManager;
     private PlayerHealthManager playerHealthManager;
     private float drawDelayCurrTime = 0f;
+    private bool alreadyDoingCircleDetection = false;
+    [Header("After Image Parameters")]
+    public float afterImageFadeOutTime = 0.3f;
+    [SerializeField]
+    private Material afterImageMaterial;
 
     void Start()
     {
@@ -75,17 +78,18 @@ public class DrawingManager : MonoBehaviour
 
     public void TriggerCatchCircleComplete(int firstid, int lastid)
     {
+        if (alreadyDoingCircleDetection)
+        {
+            // do nothing
+            return;
+        }
+        alreadyDoingCircleDetection = true;
         // Called when triggers detect that there is circle closure.
-        // Get the list of segments that  we care about
+        // Get the list of segments that  we care about. Ignore the last segment
         var segmentPoints = new List<Vector3>();
         foreach (var segs in segments)
         {
-            if (segs.id > lastid)
-            {
-                // Done
-                break;
-            }
-            if (segs.id >= firstid || segs.id <= lastid)
+            if (segs.id >= firstid && segs.id < lastid)
             {
                 segmentPoints.Add(segs.startpoint);
                 segmentPoints.Add(segs.endpoint);
@@ -103,6 +107,11 @@ public class DrawingManager : MonoBehaviour
 
         // Stage to delete segments since we are done with them now
         clearSegmentsOnNextCycle = true;
+
+        // Spawn a after image line renderer in the shape of the circle
+        StartCoroutine(SpawnAfterImageCircle(segmentPoints));
+
+        alreadyDoingCircleDetection = false;
     }
 
     public void TriggerLineBreak()
@@ -291,5 +300,26 @@ public class DrawingManager : MonoBehaviour
                 rendererPos += 2;
             }
         }
+    }
+
+    private IEnumerator SpawnAfterImageCircle(List<Vector3> segmentPoints)
+    {
+        // Create the line renderer with material
+        var afterImageObj = new GameObject("After Image Fishing Line");
+        var renderer = afterImageObj.AddComponent<LineRenderer>();
+        renderer.startWidth = segmentWidth * 1.5f;
+        renderer.material = afterImageMaterial;
+        renderer.positionCount = segmentPoints.Count;
+        renderer.loop = true;
+        for (int i = 0; i < segmentPoints.Count; i++)
+        {
+            renderer.SetPosition(i, segmentPoints[i] + Vector3.down * segmentWidth * 0.5f);
+        }
+
+        // Wait to fade out
+        yield return new WaitForSeconds(afterImageFadeOutTime);
+
+        // Delete
+        Destroy(afterImageObj);
     }
 }

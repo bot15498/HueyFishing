@@ -13,7 +13,6 @@ public class FishCatchbar : MonoBehaviour
         if (fishManager == null)
         {
             fishManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<FishManager>();
-            fishManager.currentFish.Add(this);
         }
     }
 

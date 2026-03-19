@@ -61,38 +61,34 @@ public class FishManager : MonoBehaviour
         }
 
         // Delete them
-        currentFish.Clear();
+        //currentFish.Clear();
     }
 
     private IEnumerator SpawnFish(List<GameObject> fish, List<Vector3> locations)
     {
         // Animate fish swim in.
         // Just raise them from the bottom
-        if (currentFish.Count > 0)
+        List<GameObject> fishSpawned = new List<GameObject>();
+        for (int i = 0; i < fish.Count; i++)
         {
-            List<GameObject> fishSpawned = new List<GameObject>();
+            var startingPos = locations[i];
+            startingPos.y = -5;
+            fishSpawned.Add(Instantiate(fish[i], startingPos, Quaternion.identity));
+        }
+
+        while (fishSpawned[0].transform.position.y < locations[0].y - 0.1f)
+        {
+            // Have fish raise up.
             for (int i = 0; i < fish.Count; i++)
             {
-                fishSpawned.Add(Instantiate(fish[i]));
-                var startingPos = locations[i];
-                startingPos.y = -5;
-                fishSpawned[i].transform.position = startingPos;
+                fishSpawned[i].transform.position = Vector3.MoveTowards(fishSpawned[i].transform.position, locations[i], 10f * Time.deltaTime);
             }
-
-            while (currentFish[0].transform.position.y < 0)
-            {
-                // Have fish raise up.
-                for (int i = 0; i < fish.Count; i++)
-                {
-                    fish[i].transform.position = Vector3.MoveTowards(transform.position, locations[i], 1f * Time.deltaTime);
-                }
-                yield return null;
-            }
+            yield return null;
         }
 
         // Fill the current fish list
         currentFish.Clear();
-        foreach (var fis in fish)
+        foreach (var fis in fishSpawned)
         {
             currentFish.Add(fis.GetComponent<FishCatchbar>());
         }
