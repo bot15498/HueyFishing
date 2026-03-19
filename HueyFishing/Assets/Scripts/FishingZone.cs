@@ -14,6 +14,8 @@ public class FishingZone : MonoBehaviour
     public CinemachineCamera FishingCamera;
     public FishingRegion regionType;
     bool canstartfishing;
+    public bool isFishing = false;
+    public bool isSpawningFish = false;
     public Transform ParkSpot;
     public float moveDuration = 1f;
     UiManager uiManager;
@@ -42,10 +44,16 @@ public class FishingZone : MonoBehaviour
     {
         if (canstartfishing == true && Input.GetKeyDown(KeyCode.F))
         {
+            isFishing = true;
+            isSpawningFish = true;
             startFishing();
         }
-
-
+        else if (isFishing && !isSpawningFish && CheckForFishingDone())
+        {
+            Debug.Log("You caught all the fish");
+            isFishing = false;
+            StopFishing();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -89,7 +97,7 @@ public class FishingZone : MonoBehaviour
         StartCoroutine(startFishingGameplay(delayTime));
 
 
-        
+
 
         //battle intro
 
@@ -139,6 +147,7 @@ public class FishingZone : MonoBehaviour
 
     private IEnumerator SpawnFish()
     {
+        isSpawningFish = true;
         // Animate fish swim in.
         // Just raise them from the bottom
         List<GameObject> fishSpawned = new List<GameObject>();
@@ -165,5 +174,19 @@ public class FishingZone : MonoBehaviour
         {
             fishManager.currentFish.Add(fis.GetComponent<FishCatchbar>());
         }
+        isSpawningFish = false;
+    }
+
+    private bool CheckForFishingDone()
+    {
+        bool done = true;
+        foreach(var fish in fishManager.currentFish)
+        {
+            if (fish != null)
+            {
+                done = false;
+            }
+        }
+        return done;
     }
 }
