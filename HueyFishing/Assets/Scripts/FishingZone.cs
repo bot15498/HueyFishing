@@ -128,6 +128,7 @@ public class FishingZone : MonoBehaviour
 
         Debug.Log("delay");
         //add start fishing stuff here
+        //enable fishing hud and animation. 
         drawingManager.canDraw = true;
         fishManager.SpawnFishForRegion(regionType);
 
