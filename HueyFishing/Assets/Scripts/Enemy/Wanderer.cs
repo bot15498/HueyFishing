@@ -45,6 +45,9 @@ namespace Enemy
         /// <summary> Rotate angle 180 degrees on Rigidbody collision. </summary>
         public bool bounce = true;
 
+        /// <summary> Global multiplier of magnitude of all movement presets. </summary>
+        public float speed = 1f;
+
 
         // Internal Movement Tracker
         int QueuePosition { get; set; }
@@ -102,7 +105,7 @@ namespace Enemy
                     var directionX = Mathf.Sin((float)_angle * Mathf.Deg2Rad);
                     var directionZ = Mathf.Cos((float)_angle * Mathf.Deg2Rad);
                     var direction = new Vector3(directionX, 0, directionZ);
-                    var deltaMagnitude = Mathf.Lerp(0f, (float)_magnitude, Time.deltaTime / (float)_duration);
+                    var deltaMagnitude = Mathf.Lerp(0f, (float)_magnitude, Time.deltaTime / (float)_duration) * speed;
                     var deltaMove = direction * deltaMagnitude;
                     var position = transform.position + deltaMove;
 
