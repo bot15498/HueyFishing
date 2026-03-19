@@ -1,8 +1,8 @@
 using Unity.Cinemachine;
-using Unity.VisualScripting;
 using UnityEngine;
 using DG.Tweening;
 using System.Collections;
+using System.Collections.Generic;
 
 public class FishingZone : MonoBehaviour
 {
@@ -19,6 +19,8 @@ public class FishingZone : MonoBehaviour
     UiManager uiManager;
     private DrawingManager drawingManager;
     private FishManager fishManager;
+    public List<GameObject> fishPrefabs;
+    public List<Vector3> fishStartPositions;
 
     Tween moveTween;
 
@@ -130,8 +132,38 @@ public class FishingZone : MonoBehaviour
         //add start fishing stuff here
         //enable fishing hud and animation. 
         drawingManager.canDraw = true;
-        fishManager.SpawnFishForRegion(regionType);
+        StartCoroutine(SpawnFish());
 
         //Do the action after the delay time has finished.
+    }
+
+    private IEnumerator SpawnFish()
+    {
+        // Animate fish swim in.
+        // Just raise them from the bottom
+        List<GameObject> fishSpawned = new List<GameObject>();
+        for (int i = 0; i < fishPrefabs.Count; i++)
+        {
+            var startingPos = fishStartPositions[i];
+            startingPos.y = -5;
+            fishSpawned.Add(Instantiate(fishPrefabs[i], startingPos, Quaternion.identity));
+        }
+
+        while (fishSpawned[0].transform.position.y < fishStartPositions[0].y - 0.1f)
+        {
+            // Have fish raise up.
+            for (int i = 0; i < fishPrefabs.Count; i++)
+            {
+                fishSpawned[i].transform.position = Vector3.MoveTowards(fishSpawned[i].transform.position, fishStartPositions[i], 7f * Time.deltaTime);
+            }
+            yield return null;
+        }
+
+        // Fill the current fish list
+        fishManager.currentFish.Clear();
+        foreach (var fis in fishSpawned)
+        {
+            fishManager.currentFish.Add(fis.GetComponent<FishCatchbar>());
+        }
     }
 }

@@ -11118,6 +11118,10 @@ MonoBehaviour:
   regionType: 0
   ParkSpot: {fileID: 116768521}
   moveDuration: 2
+  fishPrefabs:
+  - {fileID: 2290302650995684043, guid: cf22832fcde828646b2ad4954dcb635b, type: 3}
+  fishStartPositions:
+  - {x: 0, y: 0, z: 0}
   delayTime: 4
 --- !u!136 &1522682466
 CapsuleCollider:

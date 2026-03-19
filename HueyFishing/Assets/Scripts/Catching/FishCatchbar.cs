@@ -35,7 +35,7 @@ public class FishCatchbar : MonoBehaviour
         {
             // you win!
             Debug.Log("Caught fish");
-            fishManager.currentFish.Remove(this);
+            //fishManager.currentFish.Remove(this);
             Destroy(gameObject);
         }
     }

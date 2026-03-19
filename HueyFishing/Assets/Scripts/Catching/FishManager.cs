@@ -24,19 +24,6 @@ public class FishManager : MonoBehaviour
 
     }
 
-    public void SpawnFishForRegion(FishingRegion region)
-    {
-        switch (region)
-        {
-            case FishingRegion.TimmyRegion:
-                // For timmy, area is fixed
-                List<Vector3> positions = new List<Vector3> { new Vector3(80f, -0.17f, -14f) };
-                List<GameObject> tospawn = new List<GameObject> { timmyFishPrefab };
-                StartCoroutine(SpawnFish(tospawn, positions));
-                break;
-        }
-    }
-
     public void Cleanup()
     {
         StartCoroutine(DoCleanup());
@@ -64,33 +51,5 @@ public class FishManager : MonoBehaviour
         //currentFish.Clear();
     }
 
-    private IEnumerator SpawnFish(List<GameObject> fish, List<Vector3> locations)
-    {
-        // Animate fish swim in.
-        // Just raise them from the bottom
-        List<GameObject> fishSpawned = new List<GameObject>();
-        for (int i = 0; i < fish.Count; i++)
-        {
-            var startingPos = locations[i];
-            startingPos.y = -5;
-            fishSpawned.Add(Instantiate(fish[i], startingPos, Quaternion.identity));
-        }
-
-        while (fishSpawned[0].transform.position.y < locations[0].y - 0.1f)
-        {
-            // Have fish raise up.
-            for (int i = 0; i < fish.Count; i++)
-            {
-                fishSpawned[i].transform.position = Vector3.MoveTowards(fishSpawned[i].transform.position, locations[i], 10f * Time.deltaTime);
-            }
-            yield return null;
-        }
-
-        // Fill the current fish list
-        currentFish.Clear();
-        foreach (var fis in fishSpawned)
-        {
-            currentFish.Add(fis.GetComponent<FishCatchbar>());
-        }
-    }
+    
 }
