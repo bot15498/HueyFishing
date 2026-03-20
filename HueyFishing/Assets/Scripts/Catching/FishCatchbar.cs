@@ -6,6 +6,8 @@ public class FishCatchbar : MonoBehaviour
     public int currCatchBar = 0;
     public int maxCatchBar = 5;
     public FishManager fishManager;
+    public GameObject Sprite;
+    public ParticleRingPull particlering;
 
     void Start()
     {
@@ -21,9 +23,12 @@ public class FishCatchbar : MonoBehaviour
 
     }
 
-    public void IncreaseCatchBar(int value = 1, bool isFromCircle=true)
+    public void IncreaseCatchBar(int value = 1, bool isFromCircle = true, float loopRadius = 0f)
     {
         currCatchBar += value;
+        particlering.PlayRing(loopRadius);
+
+
         if (!isFromCircle && currCatchBar >= maxCatchBar)
         {
             // Need to do a circle around a fish for the final catch, even if bar is full

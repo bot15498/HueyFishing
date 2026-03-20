@@ -96,15 +96,19 @@ public class DrawingManager : MonoBehaviour
                 segmentPoints.Add(segs.endpoint);
             }
         }
+        //particle radius
+        float loopRadius = GetLoopRadius(segmentPoints);
 
         // Check for every fish in the scene if it's inside the region
         foreach (var fish in fishManager.currentFish)
         {
             if (fish != null && IsPointInPolygon(fish.transform.position, segmentPoints))
             {
-                fish.IncreaseCatchBar(playerHealthManager.circlePower);
+                fish.IncreaseCatchBar(playerHealthManager.circlePower,true, loopRadius);
             }
         }
+       
+        
 
         // Stage to delete segments since we are done with them now
         clearSegmentsOnNextCycle = true;
@@ -328,5 +332,32 @@ public class DrawingManager : MonoBehaviour
     {
         yield return new WaitForSeconds(CatchAllowDelay);
         alreadyDoingCircleDetection = false;
+    }
+
+    private float GetLoopRadius(List<Vector3> points)
+    {
+        if (points == null || points.Count == 0)
+            return 0f;
+
+        float minX = points[0].x;
+        float maxX = points[0].x;
+        float minZ = points[0].z;
+        float maxZ = points[0].z;
+
+        foreach (var p in points)
+        {
+            if (p.x < minX) minX = p.x;
+            if (p.x > maxX) maxX = p.x;
+            if (p.z < minZ) minZ = p.z;
+            if (p.z > maxZ) maxZ = p.z;
+        }
+
+        float width = maxX - minX;
+        float height = maxZ - minZ;
+
+        float roughDiameter = (width + height) * 0.5f;
+        float roughRadius = roughDiameter * 0.5f;
+
+        return roughRadius;
     }
 }

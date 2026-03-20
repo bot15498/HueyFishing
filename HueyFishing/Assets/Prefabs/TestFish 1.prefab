@@ -164,6 +164,7 @@ MonoBehaviour:
   currCatchBar: 0
   maxCatchBar: 700
   fishManager: {fileID: 0}
+  Sprite: {fileID: 3111281032105452934}
 --- !u!114 &282260786845071148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -216,10 +217,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9091811316abdbe419243d5e5c8b7248, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimmyBehavior
+  fishSpawnCenter: {fileID: 0}
   spriteRenderer: {fileID: 1127746254088763673}
   faceRightByDefault: 0
   flipThreshold: 1
-  fishSpawnCenter: {fileID: 0}
   arenaCenter: {x: 66.7, y: 0, z: -24.4}
   arenaSize: {x: 79.8, y: 69.7}
   moveSpeed: 20

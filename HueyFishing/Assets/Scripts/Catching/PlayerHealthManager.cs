@@ -1,4 +1,6 @@
+using System.Threading;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealthManager : MonoBehaviour
 {
@@ -27,6 +29,12 @@ public class PlayerHealthManager : MonoBehaviour
     private CameraManager cmanager;
     private GameObject player;
     FishingZoneManager fishingZoneManager;
+    [Header("Player stuff")]
+    public float IFrame;
+    private Timer timer;
+
+    
+
 
     void Start()
     {
@@ -53,6 +61,8 @@ public class PlayerHealthManager : MonoBehaviour
         {
             player = GameObject.FindGameObjectWithTag("Player");
         }
+
+
     }
 
     public void DoDamageToPlayer(int damage)
