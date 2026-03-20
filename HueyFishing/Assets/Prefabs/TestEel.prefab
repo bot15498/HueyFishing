@@ -249,14 +249,14 @@ MonoBehaviour:
   - {fileID: 5178315085531745248}
   - {fileID: 4739575011767589961}
   tailSegments: []
-  bodySpacing: 1.63
+  bodySpacing: 5
   tailSpacing: 6.06
   bodySharpness: 14
   tailSharpness: 18
   lookSharpness: 12
   trailSpacing: 0.06
   projectilePrefab: {fileID: 7154416920167272328, guid: 1918e4a0039987444aa021d57bc274eb, type: 3}
-  shotDelay: 1.2
+  shotDelay: 2
   projectileSpeed: 15
   projectileSpawnOffset: 0.15
   shootWhilePaused: 1
