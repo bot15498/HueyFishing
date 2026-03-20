@@ -1,4 +1,4 @@
-using System.Threading;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,6 +24,9 @@ public class PlayerHealthManager : MonoBehaviour
     public bool isShootingProjectiles = false;
     public bool isLifesteal = false;
     public bool isBubbleStunActive = false;
+    [Header("Damage Allowance")]
+    public bool canBeDamaged = true;
+    public float damageResetTime = 0.1f;
 
     private FishManager fishManager;
     private DrawingManager drawManager;
@@ -32,9 +35,6 @@ public class PlayerHealthManager : MonoBehaviour
     private GameObject player;
     private SkillManager skillManager;
     FishingZoneManager fishingZoneManager;
-    [Header("Player stuff")]
-    public float IFrame;
-    private Timer timer;
 
     
 
@@ -70,8 +70,9 @@ public class PlayerHealthManager : MonoBehaviour
 
     public void DoDamageToPlayer(int damage)
     {
-        if (!isLineUnbreakable || damage < 0)
+        if (canBeDamaged && (!isLineUnbreakable || damage < 0 ))
         {
+            canBeDamaged = false;
             currHealth -= damage;
             if (currHealth <= 0)
             {
@@ -79,6 +80,7 @@ public class PlayerHealthManager : MonoBehaviour
                 Debug.Log("Player died");
                 FinishFishing();
             }
+            StartCoroutine(DelayBeforeAllowingDamageAgain());
         }
     }
 
@@ -104,5 +106,11 @@ public class PlayerHealthManager : MonoBehaviour
     {
         currHealth += skillManager.lifestealAmountPerCircle;
         currHealth = currHealth > maxHealth ? maxHealth : currHealth;
+    }
+
+    private IEnumerator DelayBeforeAllowingDamageAgain()
+    {
+        yield return new WaitForSeconds(damageResetTime);
+        canBeDamaged = true;
     }
 }

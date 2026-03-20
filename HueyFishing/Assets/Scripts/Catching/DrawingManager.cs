@@ -74,6 +74,7 @@ public class DrawingManager : MonoBehaviour
             {
                 DeleteAllSegments();
             }
+            alreadyDoingCircleDetection = false;
         }
     }
 
