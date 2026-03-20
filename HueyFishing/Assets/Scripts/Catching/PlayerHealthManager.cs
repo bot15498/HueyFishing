@@ -22,12 +22,14 @@ public class PlayerHealthManager : MonoBehaviour
     public bool isDoubleCatchRate = false;
     public bool isLongerLine = false;
     public bool isShootingProjectiles = false;
+    public bool isLifesteal = false;
 
     private FishManager fishManager;
     private DrawingManager drawManager;
     private UiManager uiManager;
     private CameraManager cmanager;
     private GameObject player;
+    private SkillManager skillManager;
     FishingZoneManager fishingZoneManager;
     [Header("Player stuff")]
     public float IFrame;
@@ -90,5 +92,11 @@ public class PlayerHealthManager : MonoBehaviour
 
         currHealth = maxHealth;
         currBarGuage = 0;
+    }
+
+    public void TriggerHealOnCircle()
+    {
+        currHealth += skillManager.lifestealAmountPerCircle;
+        currHealth = currHealth > maxHealth ? maxHealth : currHealth;
     }
 }

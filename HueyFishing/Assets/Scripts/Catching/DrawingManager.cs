@@ -104,11 +104,15 @@ public class DrawingManager : MonoBehaviour
         {
             if (fish != null && IsPointInPolygon(fish.transform.position, segmentPoints))
             {
-                fish.IncreaseCatchBar(playerHealthManager.circlePower,true, loopRadius);
+                fish.IncreaseCatchBar(playerHealthManager.circlePower, true, loopRadius);
+                if (playerHealthManager.isLifesteal)
+                {
+                    playerHealthManager.TriggerHealOnCircle();
+                }
             }
         }
-       
-        
+
+
 
         // Stage to delete segments since we are done with them now
         clearSegmentsOnNextCycle = true;
