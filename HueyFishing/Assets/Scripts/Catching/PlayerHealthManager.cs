@@ -47,6 +47,7 @@ public class PlayerHealthManager : MonoBehaviour
         drawManager = GetComponent<DrawingManager>();
         player = GameObject.FindGameObjectWithTag("Player");
         fishingZoneManager = gameObject.GetComponent<FishingZoneManager>();
+        skillManager = gameObject.GetComponent<SkillManager>();
 
         currHealth = maxHealth;
         currBarGuage = 0;

@@ -12,8 +12,9 @@ public enum SkillType
 public class SkillManager : MonoBehaviour
 {
     [Header("Stun Params")]
-    public float stunAbilityDuration = 5f;
-    public float stunDuration = 1.5f;
+    public float bubbleAbilityDuration = 5f;
+    public float bubbleSpeed = 5f;
+    public int bubbleDamage = 10;
     public GameObject BubblePrefab;
     [Header("Invincible Params")]
     public float invincibleDuration = 5f;
@@ -46,12 +47,16 @@ public class SkillManager : MonoBehaviour
             switch (type)
             {
                 case SkillType.BubbleStun:
+                    StartCoroutine(StartBubble());
                     break;
                 case SkillType.DoubleCatch:
+                    StartCoroutine(StartDoubleCatch());
                     break;
                 case SkillType.Invincible:
+                    StartCoroutine(StartInvincible());
                     break;
                 case SkillType.Lifesteal:
+                    StartCoroutine(StartLifesteal());
                     break;
             }
         }
@@ -82,11 +87,23 @@ public class SkillManager : MonoBehaviour
         skillIsActive = false;
     }
 
-    public void CreateBubbleCheck(Vector3 position, Vector3 direction)
+    private IEnumerator StartBubble()
     {
+        playerHealthManager.isBubbleStunActive = true;
+        yield return new WaitForSeconds(bubbleAbilityDuration);
+        playerHealthManager.isBubbleStunActive = false;
+        skillIsActive = false;
+    }
+
+    public void CreateBubbleCheck(Vector3 startPos, Vector3 endPos)
+    {
+        // Only spawn bubble if skill is active
         if (playerHealthManager.isBubbleStunActive)
         {
-            GameObject bubble = Instantiate(BubblePrefab, position, Quaternion.LookRotation(direction));
+            GameObject bubble = Instantiate(BubblePrefab, startPos, Quaternion.LookRotation(endPos));
+            StunBubble bub = bubble.GetComponent<StunBubble>();
+            bub.SetVelocity((endPos - startPos).normalized * bubbleSpeed);
+            bub.SetDamageAmount(bubbleDamage);
         }
     }
 }

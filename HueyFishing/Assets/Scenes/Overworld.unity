@@ -5091,6 +5091,7 @@ GameObject:
   - component: {fileID: 1008659284}
   - component: {fileID: 1008659287}
   - component: {fileID: 1008659288}
+  - component: {fileID: 1008659289}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: GameManager
@@ -5182,7 +5183,10 @@ MonoBehaviour:
   isDoubleCatchRate: 0
   isLongerLine: 0
   isShootingProjectiles: 0
-  IFrame: 0
+  isLifesteal: 0
+  isBubbleStunActive: 0
+  canBeDamaged: 1
+  damageResetTime: 0.1
 --- !u!114 &1008659285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5220,6 +5224,7 @@ MonoBehaviour:
   CatchAllowDelay: 0.2
   afterImageFadeOutTime: 0.3
   afterImageMaterial: {fileID: 2100000, guid: bebb25927b93a2a4e92294e6c2823c96, type: 2}
+  isFirstSegment: 0
 --- !u!114 &1008659287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5246,6 +5251,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   Fish1: 0
+--- !u!114 &1008659289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008659280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdbbabab672d5350993f0a1cd1e1d45a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SkillManager
+  bubbleAbilityDuration: 5
+  bubbleSpeed: 17
+  bubbleDamage: 10
+  BubblePrefab: {fileID: 1506347379450107438, guid: 09bd853320271fc319f159070be11d7f, type: 3}
+  invincibleDuration: 5
+  doubleCatchDuration: 5
+  lifestealDuration: 5
+  lifestealAmountPerCircle: 10
 --- !u!1 &1010776752
 GameObject:
   m_ObjectHideFlags: 0

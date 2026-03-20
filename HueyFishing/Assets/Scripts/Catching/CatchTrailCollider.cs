@@ -40,7 +40,7 @@ public class CatchTrailCollider : MonoBehaviour
                 drawingManager.TriggerCatchCircleComplete(otherCtc.id, id);
             }
         }
-        else if (other.tag != FloorTag)
+        else if (other.tag != FloorTag && other.tag != "Bubble")
         {
             // Hit something else, take damage
             var dl = other.gameObject.GetComponent<DamageLine>();

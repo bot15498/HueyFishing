@@ -1,37 +1,45 @@
+using System.Collections;
 using UnityEngine;
 
 public class StunBubble : MonoBehaviour
 {
-    public bool isLockedOnObject = false;
-    public Transform targetTransform;
+    [SerializeField]
+    private int damageAmount = 10;
+    public float lifetime = 5f;
+    public Rigidbody rb;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
-        
+        rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetVelocity(Vector3 vel)
     {
-        if (isLockedOnObject && targetTransform != null)
+        if (rb != null)
         {
-            transform.position = targetTransform.position;
+            rb.linearVelocity = vel;
         }
-        else
-        {
-            // Keep moving forward
-            
-        }
+    }
+
+    public void SetDamageAmount(int amount)
+    {
+        damageAmount = amount;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // Check to see if it's an enemy
-        // if it's not an enemy, then pop and kill self
+        if (other.tag != CatchTrailCollider.FloorTag && other.tag != CatchTrailCollider.ColliderTag)
+        {
+            // Hit something else, take damage
+            var fc = other.gameObject.GetComponent<FishCatchbar>();
+            if (fc != null)
+            {
+                fc.IncreaseCatchBar(damageAmount);
+            }
 
-
-        // Set the stun flag on them
-        // change the 
+            // Now kill self
+            Destroy(gameObject);
+        }
     }
 }

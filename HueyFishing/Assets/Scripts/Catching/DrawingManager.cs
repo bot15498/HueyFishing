@@ -27,6 +27,9 @@ public class DrawingManager : MonoBehaviour
     public float afterImageFadeOutTime = 0.3f;
     [SerializeField]
     private Material afterImageMaterial;
+    public bool isFirstSegment = false;
+    private SkillManager skillManager;
+
 
     void Start()
     {
@@ -34,6 +37,7 @@ public class DrawingManager : MonoBehaviour
         segments = new List<CatchTrailCollider>();
         fishManager = GetComponent<FishManager>();
         playerHealthManager = GetComponent<PlayerHealthManager>();
+        skillManager = GetComponent<SkillManager>();
     }
 
     void Update()
@@ -157,6 +161,7 @@ public class DrawingManager : MonoBehaviour
             //Debug.Log(hit.point);
             if (startingPoint == Vector3.zero)
             {
+                isFirstSegment = true;
                 // Starting case. Create an object to hold the line renderer
                 CreateLineRenderer();
 
@@ -169,6 +174,13 @@ public class DrawingManager : MonoBehaviour
                 // We've hit max segment length, so snap a new trigger
                 // Update the most recent trigger one last time
                 UpdateSegmentSize(lastSegment, startingPoint, hit.point);
+
+                if (isFirstSegment)
+                {
+                    // Do bubble spawing
+                    skillManager.CreateBubbleCheck(startingPoint, hit.point);
+                }
+                isFirstSegment = false;
 
                 // Create new trigger
                 startingPoint = hit.point;
