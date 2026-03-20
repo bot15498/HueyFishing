@@ -23,6 +23,7 @@ public class PlayerHealthManager : MonoBehaviour
     public bool isLongerLine = false;
     public bool isShootingProjectiles = false;
     public bool isLifesteal = false;
+    public bool isBubbleStunActive = false;
 
     private FishManager fishManager;
     private DrawingManager drawManager;

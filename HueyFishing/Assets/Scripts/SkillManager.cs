@@ -14,6 +14,7 @@ public class SkillManager : MonoBehaviour
     [Header("Stun Params")]
     public float stunAbilityDuration = 5f;
     public float stunDuration = 1.5f;
+    public GameObject BubblePrefab;
     [Header("Invincible Params")]
     public float invincibleDuration = 5f;
     [Header("Double Catch Params")]
@@ -79,5 +80,13 @@ public class SkillManager : MonoBehaviour
         yield return new WaitForSeconds(lifestealDuration);
         playerHealthManager.isLifesteal = false;
         skillIsActive = false;
+    }
+
+    public void CreateBubbleCheck(Vector3 position, Vector3 direction)
+    {
+        if (playerHealthManager.isBubbleStunActive)
+        {
+            GameObject bubble = Instantiate(BubblePrefab, position, Quaternion.LookRotation(direction));
+        }
     }
 }
