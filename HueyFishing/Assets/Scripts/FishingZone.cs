@@ -27,6 +27,7 @@ public class FishingZone : MonoBehaviour
     FishingZone thisFishingZone;
     UnlockManager unlockManager;
     public GameObject[] FishSpawns;
+    PlayerHealthManager playerHealthManager;
 
     public int fishingUnlockID;
 
@@ -47,6 +48,7 @@ public class FishingZone : MonoBehaviour
         fishingzoneManager = gamemanager.GetComponent<FishingZoneManager>();
         thisFishingZone = gameObject.GetComponent<FishingZone>();
         unlockManager = gamemanager.GetComponent<UnlockManager>();
+        playerHealthManager = gamemanager.GetComponent<PlayerHealthManager>();
     }
 
     // Update is called once per frame
@@ -124,6 +126,7 @@ public class FishingZone : MonoBehaviour
         player.GetComponent<Boat>().toggleCanmove();
         cmanager.switchCamera(cmanager.boatCamera);
         uiManager.endFishingUI();
+        playerHealthManager.resethealth();
 
         thisCollider.enabled = true;
 
@@ -134,6 +137,7 @@ public class FishingZone : MonoBehaviour
         {
             //trigger any win stuff here
             unlockManager.fishUnlock(fishingUnlockID);
+            //play win animation 
 
             Debug.Log("fishwin");
             gameObject.SetActive(false);

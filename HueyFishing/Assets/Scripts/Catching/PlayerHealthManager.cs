@@ -88,6 +88,11 @@ public class PlayerHealthManager : MonoBehaviour
     {
         fishingZoneManager.clearFishingZone(false);
 
+        resethealth();
+    }
+
+    public void resethealth()
+    {
         currHealth = maxHealth;
         currBarGuage = 0;
     }
