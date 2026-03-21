@@ -29,7 +29,7 @@ public class StunBubble : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag != CatchTrailCollider.FloorTag && other.tag != CatchTrailCollider.ColliderTag)
+        if (other.tag != CatchTrailCollider.FloorTag && other.tag != CatchTrailCollider.ColliderTag && other.tag != "Bubble")
         {
             // Hit something else, take damage
             var fc = other.gameObject.GetComponent<FishCatchbar>();
