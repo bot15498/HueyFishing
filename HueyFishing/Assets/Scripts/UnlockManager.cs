@@ -4,6 +4,7 @@ public class UnlockManager : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
+    public bool Fish0;
     public bool Fish1;
     public bool Fish2;
     public bool Fish3;
@@ -13,6 +14,8 @@ public class UnlockManager : MonoBehaviour
     public GameObject skill2;
     public GameObject skill3;
     public GameObject skill4;
+
+    public GameObject Tutorialwalls;
     void Start()
     {
 
@@ -37,6 +40,12 @@ public class UnlockManager : MonoBehaviour
     {
         switch (fishunlock)
         {
+            case 0:
+                Fish0 = true;
+                Tutorialwalls.SetActive(false);
+
+
+                break;
             case 1:
                 Fish1 = true;
                 skill1.SetActive(true);
