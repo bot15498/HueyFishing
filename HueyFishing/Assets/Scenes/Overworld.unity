@@ -14713,6 +14713,7 @@ MonoBehaviour:
   doubleCatchDuration: 5
   lifestealDuration: 5
   lifestealAmountPerCircle: 10
+  skillIsActive: 0
 --- !u!1 &1010776752
 GameObject:
   m_ObjectHideFlags: 0

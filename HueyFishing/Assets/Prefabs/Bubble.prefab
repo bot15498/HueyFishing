@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c5c3701d7e0448298db5bffe3b38b89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StunBubble
-  damageAmount: 10
+  damageAmount: 50
   lifetime: 5
   rb: {fileID: 8429947462216645219}
 --- !u!54 &8429947462216645219
