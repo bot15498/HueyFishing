@@ -70,7 +70,7 @@ public class PlayerHealthManager : MonoBehaviour
         }
         if(fishingZoneManager.isfishing == true)
         {
-            if(currBarGuage < maxBarGuage)
+            if(!skillManager.skillIsActive && currBarGuage < maxBarGuage)
             {
                 currBarGuage += EnergyRegenRate * Time.deltaTime;
 

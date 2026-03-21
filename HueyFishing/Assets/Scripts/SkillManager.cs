@@ -25,7 +25,7 @@ public class SkillManager : MonoBehaviour
     public int lifestealAmountPerCircle = 10;
 
     private PlayerHealthManager playerHealthManager;
-    private bool skillIsActive = false;
+    public bool skillIsActive = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -46,7 +46,7 @@ public class SkillManager : MonoBehaviour
 
             if (playerHealthManager.currBarGuage >= 100)
             {
-                playerHealthManager.resetEnergy();
+                // playerHealthManager.resetEnergy();
                 skillIsActive = true;
                 switch (skillid)
                 {
@@ -68,10 +68,17 @@ public class SkillManager : MonoBehaviour
     }
 
     // The correct way to do this is to pass a method in as a parameter, but this is to make it easier to Read and debug
+    // For each skill, use the expected duration, drain the current guage bar at that rate. If they increase the guage during that time then it just increases their chances
     private IEnumerator StartInvincible()
     {
         playerHealthManager.isLineUnbreakable = true;
-        yield return new WaitForSeconds(invincibleDuration);
+        float delta = playerHealthManager.currBarGuage / invincibleDuration;
+        for(float time=0; time < invincibleDuration; time += Time.deltaTime)
+        {
+            yield return null;
+            playerHealthManager.currBarGuage = playerHealthManager.currBarGuage - Time.deltaTime * delta;
+            playerHealthManager.currBarGuage = playerHealthManager.currBarGuage <= 0 ? 0 : playerHealthManager.currBarGuage;
+        }
         playerHealthManager.isLineUnbreakable = false;
         skillIsActive = false;
     }
@@ -79,7 +86,13 @@ public class SkillManager : MonoBehaviour
     private IEnumerator StartDoubleCatch()
     {
         playerHealthManager.isDoubleCatchRate = true;
-        yield return new WaitForSeconds(doubleCatchDuration);
+        float delta = playerHealthManager.currBarGuage / doubleCatchDuration;
+        for(float time=0; time < doubleCatchDuration; time += Time.deltaTime)
+        {
+            yield return null;
+            playerHealthManager.currBarGuage = playerHealthManager.currBarGuage - Time.deltaTime * delta;
+            playerHealthManager.currBarGuage = playerHealthManager.currBarGuage <= 0 ? 0 : playerHealthManager.currBarGuage;
+        }
         playerHealthManager.isDoubleCatchRate = false;
         skillIsActive = false;
     }
@@ -87,7 +100,13 @@ public class SkillManager : MonoBehaviour
     private IEnumerator StartLifesteal()
     {
         playerHealthManager.isLifesteal = true;
-        yield return new WaitForSeconds(lifestealDuration);
+        float delta = playerHealthManager.currBarGuage / lifestealDuration;
+        for(float time=0; time < lifestealDuration; time += Time.deltaTime)
+        {
+            yield return null;
+            playerHealthManager.currBarGuage = playerHealthManager.currBarGuage - Time.deltaTime * delta;
+            playerHealthManager.currBarGuage = playerHealthManager.currBarGuage <= 0 ? 0 : playerHealthManager.currBarGuage;
+        }
         playerHealthManager.isLifesteal = false;
         skillIsActive = false;
     }
@@ -95,7 +114,13 @@ public class SkillManager : MonoBehaviour
     private IEnumerator StartBubble()
     {
         playerHealthManager.isBubbleStunActive = true;
-        yield return new WaitForSeconds(bubbleAbilityDuration);
+        float delta = playerHealthManager.currBarGuage / bubbleAbilityDuration;
+        for(float time=0; time < bubbleAbilityDuration; time += Time.deltaTime)
+        {
+            yield return null;
+            playerHealthManager.currBarGuage = playerHealthManager.currBarGuage - Time.deltaTime * delta;
+            playerHealthManager.currBarGuage = playerHealthManager.currBarGuage <= 0 ? 0 : playerHealthManager.currBarGuage;
+        }
         playerHealthManager.isBubbleStunActive = false;
         skillIsActive = false;
     }

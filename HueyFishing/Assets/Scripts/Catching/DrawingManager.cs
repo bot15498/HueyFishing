@@ -152,7 +152,10 @@ public class DrawingManager : MonoBehaviour
 
     public void BuildPlayerAbilityGuage(int amount = 10)
     {
-        playerHealthManager.AddPlayerAbilityGuage(amount);
+        if(!skillManager.skillIsActive)
+        {
+            playerHealthManager.AddPlayerAbilityGuage(amount);
+        }
     }
 
     private void DrawSegments()
@@ -166,7 +169,7 @@ public class DrawingManager : MonoBehaviour
             {
                 isFirstSegment = true;
                 // Starting case. Create an object to hold the line renderer
-                CreateLineRenderer();
+                CreateLineRenderer(hit.point);
 
                 // Now draw the line
                 startingPoint = hit.point;
@@ -297,12 +300,15 @@ public class DrawingManager : MonoBehaviour
         return inside;
     }
 
-    private void CreateLineRenderer()
+    private void CreateLineRenderer(Vector3 startpos)
     {
         fishingLine = new GameObject("Fishing Line");
         var renderer = fishingLine.AddComponent<LineRenderer>();
         renderer.startWidth = segmentWidth;
         renderer.material = lineMaterial;
+        renderer.positionCount = 2;
+        renderer.SetPosition(0, startpos + Vector3.up * segmentWidth * 0.5f);
+        renderer.SetPosition(1, startpos + Vector3.up * segmentWidth * 0.5f );
         //renderer.numCornerVertices = 3;
     }
 
