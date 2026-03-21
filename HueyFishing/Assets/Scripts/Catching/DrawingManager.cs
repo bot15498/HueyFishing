@@ -110,6 +110,8 @@ public class DrawingManager : MonoBehaviour
             if (fish != null && IsPointInPolygon(fish.transform.position, segmentPoints))
             {
                 fish.IncreaseCatchBar(playerHealthManager.circlePower, true, loopRadius);
+                playerHealthManager.addenergy();
+
                 if (playerHealthManager.isLifesteal)
                 {
                     playerHealthManager.TriggerHealOnCircle();
@@ -145,6 +147,7 @@ public class DrawingManager : MonoBehaviour
     public void DoDamageToPlayer(int damage)
     {
         playerHealthManager.DoDamageToPlayer(damage);
+        
     }
 
     public void BuildPlayerAbilityGuage(int amount = 10)

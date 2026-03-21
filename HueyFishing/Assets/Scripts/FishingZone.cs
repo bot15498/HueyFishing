@@ -30,6 +30,7 @@ public class FishingZone : MonoBehaviour
     PlayerHealthManager playerHealthManager;
 
     public int fishingUnlockID;
+    public GameObject startfishingtext;
 
     Tween moveTween;
 
@@ -49,6 +50,7 @@ public class FishingZone : MonoBehaviour
         thisFishingZone = gameObject.GetComponent<FishingZone>();
         unlockManager = gamemanager.GetComponent<UnlockManager>();
         playerHealthManager = gamemanager.GetComponent<PlayerHealthManager>();
+        
     }
 
     // Update is called once per frame
@@ -76,6 +78,7 @@ public class FishingZone : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             player = other.gameObject;
+            
         }
     }
 
@@ -86,6 +89,7 @@ public class FishingZone : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             canstartfishing = true;
+            startfishingtext.SetActive(true);
 
         }
     }
@@ -95,6 +99,8 @@ public class FishingZone : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             canstartfishing = false;
+            startfishingtext.SetActive(false);
+
         }
     }
 
@@ -107,7 +113,7 @@ public class FishingZone : MonoBehaviour
         MoveBoat();
         thisCollider.enabled = false;
         fishingzoneManager.setfishingZone(thisFishingZone);
-
+        startfishingtext.SetActive(false);
         //fihsing zone intro and delay
         //disable starting fishing zone mesh and trigger collider
 
@@ -133,15 +139,24 @@ public class FishingZone : MonoBehaviour
         drawingManager.canDraw = false;
         fishManager.Cleanup();
         isFishing = false;
+
+
         if (playerWin == true)
         {
             //trigger any win stuff here
             unlockManager.fishUnlock(fishingUnlockID);
-            //play win animation 
+            //play win animation with skill unlocked
+
+            
 
             Debug.Log("fishwin");
             gameObject.SetActive(false);
 
+        }
+
+        if (playerWin == false) { 
+          //playerloseanimation
+        
         }
 
         //canstartfishing = true;

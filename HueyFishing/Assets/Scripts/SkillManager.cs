@@ -39,25 +39,30 @@ public class SkillManager : MonoBehaviour
 
     }
 
-    public void ActivateSkill(SkillType type)
+    public void ActivateSkill(int skillid)
     {
         if (!skillIsActive)
         {
-            skillIsActive = true;
-            switch (type)
+
+            if (playerHealthManager.currBarGuage >= 100)
             {
-                case SkillType.BubbleStun:
-                    StartCoroutine(StartBubble());
-                    break;
-                case SkillType.DoubleCatch:
-                    StartCoroutine(StartDoubleCatch());
-                    break;
-                case SkillType.Invincible:
-                    StartCoroutine(StartInvincible());
-                    break;
-                case SkillType.Lifesteal:
-                    StartCoroutine(StartLifesteal());
-                    break;
+                playerHealthManager.resetEnergy();
+                skillIsActive = true;
+                switch (skillid)
+                {
+                    case 1:
+                        StartCoroutine(StartBubble());
+                        break;
+                    case 2:
+                        StartCoroutine(StartDoubleCatch());
+                        break;
+                    case 3:
+                        StartCoroutine(StartInvincible());
+                        break;
+                    case 4:
+                        StartCoroutine(StartLifesteal());
+                        break;
+                }
             }
         }
     }

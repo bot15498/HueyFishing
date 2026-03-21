@@ -7,9 +7,9 @@ public class PlayerHealthManager : MonoBehaviour
     [Header("Main Player Stats")]
     public int currHealth = 100;
     public int maxHealth = 100;
-    public int currBarGuage = 0;
-    public int maxBarGuage = 100;
-    public int abilityCost = 25;
+    public float currBarGuage = 0;
+    public float maxBarGuage = 100;
+    public float abilityCost = 25;
     [Header("Other Player Stats")]
     public int baseCirclePower = 100; // How much catch bar you fill up per circle. 
     public int circlePower = 100;
@@ -36,7 +36,7 @@ public class PlayerHealthManager : MonoBehaviour
     private SkillManager skillManager;
     FishingZoneManager fishingZoneManager;
 
-    
+    public float EnergyRegenRate;
 
 
     void Start()
@@ -51,6 +51,9 @@ public class PlayerHealthManager : MonoBehaviour
 
         currHealth = maxHealth;
         currBarGuage = 0;
+
+
+
     }
 
     // Update is called once per frame
@@ -65,9 +68,33 @@ public class PlayerHealthManager : MonoBehaviour
         {
             player = GameObject.FindGameObjectWithTag("Player");
         }
+        if(fishingZoneManager.isfishing == true)
+        {
+            if(currBarGuage < maxBarGuage)
+            {
+                currBarGuage += EnergyRegenRate * Time.deltaTime;
 
+            }
+
+
+        }
 
     }
+
+    public void resetEnergy()
+    {
+        currBarGuage = 0;
+    }
+
+    public void addenergy()
+    {
+
+        if (currBarGuage < maxBarGuage)
+        {
+            currBarGuage += 10;
+        }
+    }
+        
 
     public void DoDamageToPlayer(int damage)
     {
