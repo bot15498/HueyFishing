@@ -29,6 +29,7 @@ public class DrawingManager : MonoBehaviour
     private Material afterImageMaterial;
     public bool isFirstSegment = false;
     private SkillManager skillManager;
+    private ReelManager reelManager;
 
 
     void Start()
@@ -38,6 +39,7 @@ public class DrawingManager : MonoBehaviour
         fishManager = GetComponent<FishManager>();
         playerHealthManager = GetComponent<PlayerHealthManager>();
         skillManager = GetComponent<SkillManager>();
+        reelManager = GetComponent<ReelManager>();
     }
 
     void Update()
@@ -235,6 +237,8 @@ public class DrawingManager : MonoBehaviour
 
     private void UpdateSegmentSize(CatchTrailCollider segs, Vector3 startpoint, Vector3 endpoint)
     {
+        reelManager.UpdateReelPosition(segs.endpoint, endpoint);
+
         // Segment size is based on z
         segs.transform.position = (startpoint + endpoint) / 2f;
         segs.transform.LookAt(endpoint);
