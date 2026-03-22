@@ -221,7 +221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishCatchbar
   currCatchBar: 0
-  maxCatchBar: 1000
+  maxCatchBar: 2000
   fishManager: {fileID: 0}
   Sprite: {fileID: 3958497633922823980}
   particlering: {fileID: 6222708713410961818}
@@ -285,7 +285,7 @@ MonoBehaviour:
   faceRightByDefault: 1
   flipThreshold: 0.05
   arenaCenter: {x: 210.04843, y: 0, z: 80.899994}
-  arenaSize: {x: 40, y: 40}
+  arenaSize: {x: 174, y: 70}
   moveSpeed: 25
   acceleration: 9
   arriveDistance: 0.4

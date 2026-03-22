@@ -7,6 +7,9 @@ public class FishingZoneManager : MonoBehaviour
     public bool isfishing;
     PlayerHealthManager healthManager;
 
+    public Animator winanim;
+    public Animator loseanim;
+
     void Start()
     {
         isfishing = false;
@@ -31,6 +34,18 @@ public class FishingZoneManager : MonoBehaviour
 
     public void clearFishingZone(bool playerWin)
     {
+
+        if(playerWin == true)
+        {
+            winanim.Play("WinAnimation",- 1, 0f);
+          
+        }
+
+        if(playerWin == false)
+        {
+            loseanim.Play("LoseAnimation", -1, 0f);
+           
+        }
         currentFishingZone.StopFishing(playerWin);
         isfishing = false;
         healthManager.resetEnergy();

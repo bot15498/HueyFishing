@@ -103,6 +103,8 @@ public class TimmyBehavior : FishMovement
             arenaCenter = fishSpawnCenter.transform.position;
 
         PickNewPause();
+        rb.constraints = RigidbodyConstraints.FreezeRotation
+               | RigidbodyConstraints.FreezePositionY;
     }
 
     private void FixedUpdate()

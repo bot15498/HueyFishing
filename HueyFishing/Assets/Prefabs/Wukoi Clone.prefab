@@ -242,7 +242,7 @@ MonoBehaviour:
   faceRightByDefault: 1
   flipThreshold: 0.05
   arenaCenter: {x: 0, y: 0, z: 0}
-  arenaSize: {x: 100, y: 100}
+  arenaSize: {x: 174, y: 100}
   assignedQuadrant: 0
   moveSpeed: 15
   acceleration: 8

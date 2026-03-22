@@ -31,7 +31,7 @@ public class FishingZone : MonoBehaviour
 
     public int fishingUnlockID;
     public GameObject startfishingtext;
-
+    public Animator anim;
     Tween moveTween;
 
     GameObject player;
@@ -78,7 +78,8 @@ public class FishingZone : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             player = other.gameObject;
-            
+            startfishingtext.SetActive(true);
+
         }
     }
 
@@ -89,7 +90,7 @@ public class FishingZone : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             canstartfishing = true;
-            startfishingtext.SetActive(true);
+           
 
         }
     }
@@ -106,6 +107,8 @@ public class FishingZone : MonoBehaviour
 
     void startFishing()
     {
+
+        anim.Play("Intro", -1, 0f);
         player.GetComponent<Boat>().toggleCanmove();
         cmanager.switchCamera(FishingCamera);
         uiManager.startFishingUI();

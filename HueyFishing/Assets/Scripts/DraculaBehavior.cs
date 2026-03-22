@@ -119,6 +119,10 @@ public class DraculaBehavior : FishMovement
 
     FishCatchbar fcb;
 
+    public Sprite sharkIdle;
+    public Sprite sharkChase;
+    public Sprite sharkBat;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -144,6 +148,9 @@ public class DraculaBehavior : FishMovement
 
         EnterRegularPhase();
         PickNewPause();
+        rb.constraints = RigidbodyConstraints.FreezeRotation
+               | RigidbodyConstraints.FreezePositionY;
+
     }
 
     private void FixedUpdate()
@@ -195,6 +202,7 @@ public class DraculaBehavior : FishMovement
 
     private void EnterRegularPhase()
     {
+        spriteRenderer.sprite = sharkIdle;
         currentPhase = DraculaPhase.Regular;
         isInvincible = false;
         fcb.isinvincible = false;
@@ -207,6 +215,7 @@ public class DraculaBehavior : FishMovement
     private void EnterChasePhase()
     {
         currentPhase = DraculaPhase.ChaseCursor;
+        spriteRenderer.sprite = sharkChase;
         isInvincible = false;
         fcb.isinvincible = false;
         phaseTimer = chasePhaseDuration;
@@ -221,6 +230,8 @@ public class DraculaBehavior : FishMovement
 
     private void EnterInvinciblePhase()
     {
+
+        spriteRenderer.sprite = sharkBat;
         currentPhase = DraculaPhase.Invincible;
         fcb.isinvincible = true;
         isInvincible = true;
