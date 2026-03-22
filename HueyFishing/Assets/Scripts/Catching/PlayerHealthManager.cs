@@ -89,7 +89,7 @@ public class PlayerHealthManager : MonoBehaviour
     public void addenergy()
     {
 
-        if (currBarGuage < maxBarGuage)
+        if (!skillManager.skillIsActive && currBarGuage < maxBarGuage)
         {
             currBarGuage += 10;
         }

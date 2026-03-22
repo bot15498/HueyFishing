@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class GlobalSoundManager : MonoBehaviour
@@ -5,9 +6,12 @@ public class GlobalSoundManager : MonoBehaviour
     public AudioSource reelSource;
     public AudioSource effectSource;
     public AudioSource boatSource;
+    public AudioSource catchSource;
     public AudioClip lineSnap;
     public AudioClip reelSound;
     public AudioClip boatSound;
+    public AudioClip catchSound;
+    private bool isStoppingBoatAudio = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -47,6 +51,11 @@ public class GlobalSoundManager : MonoBehaviour
         }
     }
 
+    public void PlayCatchSound()
+    {
+        catchSource.PlayOneShot(catchSound);
+    }
+
     public void SetReelSpeed(float speed)
     {
         // 1 means normal speed, anything higher is faster.
@@ -62,14 +71,24 @@ public class GlobalSoundManager : MonoBehaviour
 
     public void StopBoatSound()
     {
-        if (boatSource.isPlaying)
+        if (boatSource.isPlaying && !isStoppingBoatAudio)
         {
-            boatSource.Stop();
+            // boatSource.Stop();
+            StartCoroutine(FadeOutBoatSound());
         }
     }
 
-    private void FadeOutBoatSound()
+    private IEnumerator FadeOutBoatSound()
     {
-        
+        isStoppingBoatAudio = true;
+        float startVolume = boatSource.volume;
+        while (boatSource.volume > 0)
+        {
+            boatSource.volume -= startVolume * Time.deltaTime;
+            yield return null;
+        }
+        boatSource.Stop();
+        boatSource.volume = startVolume;
+        isStoppingBoatAudio = false;
     }
 }

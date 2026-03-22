@@ -112,6 +112,7 @@ public class DrawingManager : MonoBehaviour
         float loopRadius = GetLoopRadius(segmentPoints);
 
         // Check for every fish in the scene if it's inside the region
+        bool found = false;
         foreach (var fish in fishManager.currentFish)
         {
             if (fish != null && IsPointInPolygon(fish.transform.position, segmentPoints))
@@ -123,7 +124,13 @@ public class DrawingManager : MonoBehaviour
                 {
                     playerHealthManager.TriggerHealOnCircle();
                 }
+                found = true;
             }
+        }
+
+        if (found)
+        {
+            soundManager.PlayCatchSound();
         }
 
 
