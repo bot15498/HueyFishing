@@ -30,6 +30,8 @@ public class DrawingManager : MonoBehaviour
     public bool isFirstSegment = false;
     private SkillManager skillManager;
     private ReelManager reelManager;
+    private GlobalSoundManager soundManager;
+
 
 
     void Start()
@@ -40,6 +42,7 @@ public class DrawingManager : MonoBehaviour
         playerHealthManager = GetComponent<PlayerHealthManager>();
         skillManager = GetComponent<SkillManager>();
         reelManager = GetComponent<ReelManager>();
+        soundManager = GetComponent<GlobalSoundManager>();
     }
 
     void Update()
@@ -65,6 +68,7 @@ public class DrawingManager : MonoBehaviour
             else
             {
                 // Release mouse click, clear everything
+                soundManager.StopReelSound();
                 DeleteAllSegments();
             }
 
@@ -78,6 +82,7 @@ public class DrawingManager : MonoBehaviour
             // Clear any segments if they are active
             if (segments.Count > 0 || fishingLine != null)
             {
+                soundManager.StopReelSound();
                 DeleteAllSegments();
             }
             alreadyDoingCircleDetection = false;
@@ -126,10 +131,13 @@ public class DrawingManager : MonoBehaviour
         // Stage to delete segments since we are done with them now
         clearSegmentsOnNextCycle = true;
 
+        // Play Sound
+
         // Spawn a after image line renderer in the shape of the circle
         StartCoroutine(SpawnAfterImageCircle(segmentPoints));
 
         StartCoroutine(DelayBeforeAllowingCirclAgain());
+
     }
 
     public void TriggerLineBreak()
@@ -140,6 +148,8 @@ public class DrawingManager : MonoBehaviour
             // Also puts a delay before the player can start drawing a line again
             clearSegmentsOnNextCycle = true;
 
+            soundManager.PlayLineSnap();
+
             // Also make it so there is a small delay before you can draw again to prevent
             // players from breaking the line again
             drawDelayCurrTime = drawDelayAfterBreak;
@@ -149,12 +159,12 @@ public class DrawingManager : MonoBehaviour
     public void DoDamageToPlayer(int damage)
     {
         playerHealthManager.DoDamageToPlayer(damage);
-        
+
     }
 
     public void BuildPlayerAbilityGuage(int amount = 10)
     {
-        if(!skillManager.skillIsActive)
+        if (!skillManager.skillIsActive)
         {
             playerHealthManager.AddPlayerAbilityGuage(amount);
         }
@@ -202,6 +212,8 @@ public class DrawingManager : MonoBehaviour
                 // Update the line renderer
                 UpdateLineRenderer();
             }
+
+            soundManager.PlayReelSound();
         }
     }
 
@@ -312,7 +324,7 @@ public class DrawingManager : MonoBehaviour
         renderer.material = lineMaterial;
         renderer.positionCount = 2;
         renderer.SetPosition(0, startpos + Vector3.up * segmentWidth * 0.5f);
-        renderer.SetPosition(1, startpos + Vector3.up * segmentWidth * 0.5f );
+        renderer.SetPosition(1, startpos + Vector3.up * segmentWidth * 0.5f);
         //renderer.numCornerVertices = 3;
     }
 

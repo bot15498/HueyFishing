@@ -5,10 +5,12 @@ public class ReelManager : MonoBehaviour
 {
     public float reelSpeed = 5f;
     public Transform handleTransform;
+    private GlobalSoundManager soundManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        soundManager = GetComponent<GlobalSoundManager>();
         handleTransform.eulerAngles = new Vector3(0f, 0f, 0f);
     }
 
