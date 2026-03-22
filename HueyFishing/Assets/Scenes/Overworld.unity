@@ -421,7 +421,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: TIMMYS GOLDFISH
+  m_text: TIMMYS GODDAMN GOLDFISH
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 28424d2c0acaa224aa0e201587f4ad7c, type: 2}
   m_sharedMaterial: {fileID: 7679374178115302599, guid: 28424d2c0acaa224aa0e201587f4ad7c, type: 2}
@@ -4464,7 +4464,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: c4c0a6d5ca43183a3854dce6f5d1fc8e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.475
   m_Pitch: 1
   Loop: 1
   Mute: 0

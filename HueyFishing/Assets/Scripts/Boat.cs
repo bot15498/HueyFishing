@@ -50,10 +50,14 @@ public class Boat : MonoBehaviour
     Tween turnVisualTween;
     float lastVisualYaw;
 
+    private GlobalSoundManager globalSoundManager;
 
 
     private void Start()
     {
+        var gamemanager = GameObject.FindGameObjectWithTag("GameManager");
+        globalSoundManager = gamemanager.GetComponent<GlobalSoundManager>();
+
         rb = GetComponent<Rigidbody>();
         canMove = true;
         StartRocking();
@@ -103,6 +107,15 @@ public class Boat : MonoBehaviour
             forward.x * currentSpeed,
             rb.linearVelocity.y,
             forward.z * currentSpeed);
+
+        if (rb.linearVelocity.magnitude > 0.1)
+        {
+            globalSoundManager.PlayBoatSound();
+        }
+        else
+        {
+            globalSoundManager.StopBoatSound();
+        }
     }
 
     void HandleTurning()
@@ -181,7 +194,7 @@ public class Boat : MonoBehaviour
         if (rockTween == null || !rockTween.IsActive())
             return;
 
-        
+
         float speedPercent = Mathf.Clamp01(Mathf.Abs(currentSpeed) / maxSpeed);
         rockTween.timeScale = Mathf.Lerp(1f, 1.35f, speedPercent);
 
