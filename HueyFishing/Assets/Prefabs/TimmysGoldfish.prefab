@@ -5026,7 +5026,7 @@ MonoBehaviour:
   flipThreshold: 1
   arenaCenter: {x: 67.8, y: 0, z: -24.4}
   arenaSize: {x: 79.8, y: 69.7}
-  moveSpeed: 70
+  moveSpeed: 50
   acceleration: 8
   arriveDistance: 0.4
   minPauseTime: 0.5

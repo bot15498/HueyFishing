@@ -5094,7 +5094,7 @@ MonoBehaviour:
   Sprite: {fileID: 4564076860492637012}
   particlering: {fileID: 3291801362581687704}
   isinvincible: 0
-  healAmount: 10
+  healAmount: 5
   healInterval: 0.05
 --- !u!114 &7390694333097440024
 MonoBehaviour:
@@ -5178,10 +5178,10 @@ MonoBehaviour:
   stuckTimeThreshold: 0.4
   escapeDuration: 0.5
   escapeStrength: 6
-  regularPhaseDuration: 4
-  chasePhaseDuration: 5
+  regularPhaseDuration: 6
+  chasePhaseDuration: 7
   chaseMoveSpeed: 60
-  invinciblePhaseDuration: 2.5
+  invinciblePhaseDuration: 4
   cursorCamera: {fileID: 0}
   invincibleUsesRegularMovement: 1
   currentPhase: 0
