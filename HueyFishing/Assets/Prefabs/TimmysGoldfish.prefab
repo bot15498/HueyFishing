@@ -5029,8 +5029,8 @@ MonoBehaviour:
   moveSpeed: 50
   acceleration: 8
   arriveDistance: 0.4
-  minPauseTime: 0.5
-  maxPauseTime: 1.5
+  minPauseTime: 2
+  maxPauseTime: 3
   minMoveTime: 1.5
   maxMoveTime: 3.5
   centerBias: 2.5

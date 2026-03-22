@@ -4464,7 +4464,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: c4c0a6d5ca43183a3854dce6f5d1fc8e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.01
+  m_Volume: 0.03
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -5028,7 +5028,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.493
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -13366,8 +13366,8 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
+  m_Volume: 0.179
+  m_Pitch: 1.43
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -19542,7 +19542,7 @@ Transform:
   m_GameObject: {fileID: 1179961380}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.51, y: 1.8822398, z: -12.972768}
+  m_LocalPosition: {x: 0.51, y: 1.9, z: -19.23}
   m_LocalScale: {x: 0.37821478, y: 1.9606551, z: 0.37821478}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -30197,7 +30197,7 @@ MonoBehaviour:
   thisCollider: {fileID: 0}
   FishSpawns:
   - {fileID: 1988464338}
-  fishingUnlockID: 3
+  fishingUnlockID: 4
   startfishingtext: {fileID: 1325227471}
   anim: {fileID: 794600885}
   delayTime: 4
@@ -37655,7 +37655,7 @@ MonoBehaviour:
   thisCollider: {fileID: 0}
   FishSpawns:
   - {fileID: 750466541}
-  fishingUnlockID: 2
+  fishingUnlockID: 3
   startfishingtext: {fileID: 1325227471}
   anim: {fileID: 1729320654}
   delayTime: 4
@@ -50066,7 +50066,7 @@ MonoBehaviour:
   thisCollider: {fileID: 0}
   FishSpawns:
   - {fileID: 1193606677}
-  fishingUnlockID: 4
+  fishingUnlockID: 2
   startfishingtext: {fileID: 1325227471}
   anim: {fileID: 1046510006}
   delayTime: 4
@@ -60645,7 +60645,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.052
   m_Pitch: 1
   Loop: 0
   Mute: 0
