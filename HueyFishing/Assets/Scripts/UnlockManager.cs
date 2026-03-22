@@ -70,7 +70,7 @@ public class UnlockManager : MonoBehaviour
 
                 break;
             case 4:
-                Fish3 = true;
+                Fish4 = true;
                 skill4.SetActive(true);
 
                 break;
