@@ -16,9 +16,11 @@ public class UnlockManager : MonoBehaviour
     public GameObject skill4;
 
     public GameObject Tutorialwalls;
+
+    public GameObject winner;
     void Start()
     {
-
+        winner.SetActive(false);
         Fish1 = false;
         skill1.SetActive(false);
         skill2.SetActive(false);
@@ -31,7 +33,13 @@ public class UnlockManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(Fish1 == true && Fish2 == true && Fish0 == true && Fish3 == true && Fish4 == true)
+        {
+            winner.SetActive(true);
+        }
+
+
+
     }
 
 

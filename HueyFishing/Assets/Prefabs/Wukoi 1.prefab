@@ -221,7 +221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FishCatchbar
   currCatchBar: 0
-  maxCatchBar: 2000
+  maxCatchBar: 2500
   fishManager: {fileID: 0}
   Sprite: {fileID: 3958497633922823980}
   particlering: {fileID: 6222708713410961818}
