@@ -36,8 +36,11 @@ public class GlobalSoundManager : MonoBehaviour
 
     public void StopReelSound()
     {
-        reelSource.Stop();
-        Debug.Log("stopping reel");
+        if (reelSource.isPlaying)
+        {
+            reelSource.Stop();
+            Debug.Log("stopping reel");
+        }
     }
 
     public void SetReelSpeed(float speed)
